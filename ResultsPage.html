@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CampusElect - Election Results</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --primary: #4F7C82;      /* main primary color */
+    --secondary: #93B1B5;    /* secondary highlights */
+    --accent: #B8E3E9;       /* accent elements */
+    --text: #0B2E33;         /* main text color */
+    --bg: #FFFFFF;            /* background */
+    --card-radius: 12px;
+    --btn-radius: 6px;
+    --shadow-card: 0 2px 6px rgba(79,124,130,0.15);
+    --shadow-card-light: 0 1px 3px rgba(0,0,0,0.08);
+    --transition-fast: 0.2s;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: rockwell; }
+  html { font-size: 16px; }
+  body { background: var(--bg); color: var(--text); line-height: 1.4; }
+
+  /* ====== TOP NAV ====== */
+  header.topbar {
+    width: 100%;
+    background: var(--bg);
+    border-bottom: 1px solid var(--secondary);
+    padding: 16px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .brand { font-size: 1.4rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+  .topnav { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .topnav a {
+    padding: 6px 14px; border-radius: 999px; font-size: 0.95rem; color: var(--text); text-decoration: none;
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+  .topnav a:hover { background: var(--accent); color: var(--primary); }
+  .topnav a.active { background: var(--secondary); color: var(--bg); }
+
+  /* ====== PAGE HEADER ====== */
+  .page-header { max-width: 1200px; margin: 32px auto 16px; padding: 0 5%; }
+  .page-header h1 { font-size: 2rem; margin-bottom: 4px; color: var(--text); font-weight: 700; }
+  .page-header p { color: var(--secondary); font-size: 1rem; }
+
+  /* ====== GENERAL CARD ====== */
+  .card {
+    background: var(--bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-card-light);
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .container { max-width: 1200px; margin: 0 auto 48px; padding: 0 5%; }
+
+  /* ====== FILTERS CARD ====== */
+  .filters { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; align-items: end; }
+  .filters .field { display: flex; flex-direction: column; gap: 4px; }
+  .filters label { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+  .filters select, .filters input[type="date"] {
+    padding: 10px 12px; border-radius: var(--btn-radius); border: 1px solid var(--accent);
+    background: var(--bg); color: var(--text); font-size: 0.95rem; transition: border var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .filters select:focus, .filters input[type="date"]:focus {
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79,124,130,0.25);
+  }
+  .filters button {
+    padding: 12px 20px; border: none; border-radius: var(--btn-radius);
+    background: var(--primary); color: var(--bg); font-weight: 600; cursor: pointer;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+  .filters button:hover { background: var(--secondary); transform: translateY(-1px); }
+
+  /* ====== RESULTS CARD ====== */
+  .results-section-header { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+  .results-section-header h2 { font-size: 1.4rem; color: var(--primary); }
+  .view-toggle { display: flex; gap: 8px; }
+  .view-toggle button {
+    padding: 6px 14px; font-size: 0.9rem; border: 1px solid var(--accent); border-radius: var(--btn-radius);
+    background: var(--bg); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all var(--transition-fast);
+  }
+  .view-toggle button:hover { border-color: var(--secondary); color: var(--primary); }
+  .view-toggle button.active { background: var(--secondary); border-color: var(--secondary); color: var(--bg); }
+
+  .results-visuals { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 24px; align-items: start; }
+  .chart-box { flex: 1; min-width: 280px; max-width: 400px; aspect-ratio: 1 / 1; height: auto; }
+  .chart-box.bar { flex: 1; min-width: 280px; max-width: 600px; height: 300px; }
+  canvas { background: var(--bg); border-radius: 8px; width: 100% !important; height: 100% !important; }
+
+  .results-table-wrap { display: none; overflow-x: auto; }
+  .results-table-wrap.active { display: block; }
+  .results-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .results-table th, .results-table td { padding: 10px 12px; border-bottom: 1px solid var(--accent); text-align: left; font-size: 0.95rem; }
+  .results-table th { background: var(--accent); color: var(--text); font-weight: 700; }
+
+  /* ====== PAST ELECTIONS CARD ====== */
+  .past-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 8px; }
+  .past-header h2 { font-size: 1.4rem; color: var(--primary); }
+  .past-header a.download { font-size: 0.95rem; color: var(--secondary); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: color var(--transition-fast); }
+  .past-header a.download:hover { color: var(--primary); }
+
+  .past-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .past-table th, .past-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--accent); font-size: 0.95rem; }
+  .past-table th { background: var(--accent); color: var(--text); font-weight: 700; }
+  .status { font-weight: bold; color: var(--secondary); }
+  .past-action { color: var(--primary); cursor: pointer; transition: color var(--transition-fast); }
+  .past-action:hover { color: var(--secondary); }
+
+  /* ====== FOOTER ====== */
+  footer.site-footer { background: var(--primary); color: #fff; padding: 48px 5% 32px; margin-top: 64px; }
+  .footer-grid { max-width: 1200px; margin: 0 auto 32px; display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 32px; }
+  .footer-grid h4 { margin-bottom: 12px; font-size: 1.05rem; font-weight: 700; color: #fff; }
+  .footer-grid p, .footer-grid a { font-size: 0.95rem; color: #fff; line-height: 1.5; text-decoration: none; display: block; margin-bottom: 6px; transition: color var(--transition-fast); }
+  .footer-grid a:hover { color: var(--secondary); }
+  .footer-grid i { color: var(--secondary); margin-right: 6px; transition: color 0.2s; }
+  .footer-grid a:hover i { color: #fff; }
+  .footer-grid .socials a { display: inline-block; margin-right: 8px; }
+  .copyright { text-align: center; font-size: 0.85rem; color: #cbd5e1; }
+
+  @media (max-width: 600px) { .results-section-header h2, .past-header h2 { font-size: 1.2rem; } }
+</style>
+</head>
+<body>
+
+<!-- ====== TOP BAR ====== -->
+<header class="topbar">
+  <div class="brand">
+    <i class="fa-solid fa-square-poll-vertical"></i>CampusElect
+  </div>
+  <nav class="topnav">
+    <a href="HomePage.html">Home</a>
+    <a href="UserDashboard.html">Dashboard</a>
+    <a href="VotingPage.html">Elections</a>
+    <a href="ResultsPage.html" class="active">Results</a>
+    <a href="#">Reports</a>
+  </nav>
+</header>
+
+<!-- ====== PAGE HEADER ====== -->
+<div class="page-header">
+  <h1>Election Results</h1>
+  <p>View and analyze election results across your institution.</p>
+</div>
+
+<main class="container">
+
+  <!-- ====== FILTER CARD ====== -->
+  <section class="card">
+    <form class="filters" id="filterForm" onsubmit="return false;">
+      <div class="field">
+        <label for="electionSelect">Election Type</label>
+        <select id="electionSelect">
+          <option value="president2025">United Student Movement 2025</option>
+          <option value="department2025">Department Representative 2025</option>
+          <option value="cab2025">Sports Committee 2025</option>
+          <option value="club2025">Club Elections 2025</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="dateInput">Date Range</label>
+        <input type="date" id="dateInput" />
+      </div>
+
+      <div class="field">
+        <label for="departmentSelect">Department</label>
+        <select id="departmentSelect">
+          <option value="all">All Departments</option>
+          <option value="cs">Computer Science</option>
+          <option value="business">Business</option>
+          <option value="arts">Arts</option>
+          <option value="engineering">Engineering</option>
+          <option value="education">Education</option>
+          <option value="health">Health Sciences</option>
+        </select>
+      </div>
+
+      <button id="filterBtn" type="button"><i class="fa fa-filter"></i> Apply Filters</button>
+    </form>
+  </section>
+
+  <!-- ====== RESULTS CARD ====== -->
+  <section class="card">
+    <div class="results-section-header">
+      <h2 id="electionTitle">United Student Movement Guild 2025</h2>
+      <div class="view-toggle">
+        <button type="button" id="chartViewBtn" class="active"><i class="fa fa-chart-pie"></i> Chart View</button>
+        <button type="button" id="tableViewBtn"><i class="fa fa-table"></i> Table View</button>
+      </div>
+    </div>
+
+    <div class="results-visuals" id="chartView">
+      <div class="chart-box">
+        <canvas id="pieChart"></canvas>
+      </div>
+      <div class="chart-box bar">
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+
+    <div class="results-table-wrap" id="resultsTableWrap">
+      <table class="results-table" id="resultsTable">
+        <thead>
+          <tr><th>Candidate</th><th>Votes (%)</th></tr>
+        </thead>
+        <tbody id="resultsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== PAST ELECTIONS CARD ====== -->
+  <section class="card">
+    <div class="past-header">
+      <h2>Past Elections</h2>
+      <a href="#" class="download"><i class="fa fa-download"></i> Download Report</a>
+    </div>
+    <table class="past-table">
+      <thead>
+        <tr>
+          <th>Election Name</th><th>Date</th><th>Winner</th><th>Participation</th><th>Status</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Department Representatives 2025</td><td>2025-12-15</td><td>Sarah Johnson</td><td>78%</td>
+          <td class="status">Completed</td>
+          <td><i class="fa fa-download past-action" title="Download Report"></i></td>
+        </tr>
+        <tr>
+          <td>Library Committee</td><td>2025-11-30</td><td>Michael Chen</td><td>65%</td>
+          <td class="status">Completed</td>
+          <td><i class="fa fa-download past-action" title="Download Report"></i></td>
+        </tr>
+        <tr>
+          <td>Campus Activities Board</td><td>2025-11-15</td><td>Emily Davis</td><td>72%</td>
+          <td class="status">Completed</td>
+          <td><i class="fa fa-download past-action" title="Download Report"></i></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<!-- ====== FOOTER ====== -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div><h4>About CampusElect</h4><p>Modernizing campus elections with secure and transparent voting solutions.</p></div>
+    <div><h4>Quick Links</h4><a href="HomePage.html">Help Center</a><a href="#">Documentation</a><a href="#">API Access</a></div>
+    <div><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Security</a></div>
+    <div><h4>Contact</h4><p>support@campuselect.com</p><p>+1 (555) 123-4567</p>
+      <div class="socials">
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">© 2024 CampusElect. All rights reserved.</div>
+</footer>
+
+<script>
+/* Election Data + Chart Logic (unchanged from original page) */
+const electionData = {
+  president2025: { title:"Student Council President Election 2025", candidates:[{name:"Sarah Johnson",pct:45},{name:"Michael Chen",pct:37},{name:"Emily Davis",pct:18}], deptVotes:{cs:180,business:220,arts:170}},
+  department2025: { title:"Department Representative Election 2025", candidates:[{name:"Alice Brown",pct:50},{name:"David Lee",pct:30},{name:"Karen Smith",pct:20}], deptVotes:{cs:200,business:180,arts:150}},
+  cab2025: { title:"Campus Activities Board Election 2025", candidates:[{name:"Tom White",pct:40},{name:"Linda Young",pct:35},{name:"John Miller",pct:25}], deptVotes:{cs:160,business:210,arts:180}},
+  club2025: { title:"Club Elections 2025", candidates:[{name:"Chris Hall",pct:55},{name:"Anna Scott",pct:25},{name:"Victor Hugo",pct:20}], deptVotes:{cs:220,business:190,arts:140}}
+};
+const deptLabels={cs:"Computer Science",business:"Business",arts:"Arts",engineering:"Engineering",education:"Education",health:"Health Sciences",all:"All Departments"};
+const pieColors=['#4F7C82','#93B1B5','#B8E3E9'];
+
+const pieCtx=document.getElementById('pieChart').getContext('2d');
+const barCtx=document.getElementById('barChart').getContext('2d');
+
+let pieChart=new Chart(pieCtx,{type:'doughnut',data:{labels:[],datasets:[{data:[],backgroundColor:pieColors,borderWidth:1}]},options:{responsive:true,plugins:{legend:{position:'bottom'}}}});
+let barChart=new Chart(barCtx,{type:'bar',data:{labels:['Computer Science','Business','Arts'],datasets:[{label:'Votes',data:[],backgroundColor:'#4F7C82'}]},options:{responsive:true,scales:{y:{beginAtZero:true}},plugins:{legend:{display:false}}}});
+
+const electionSelect=document.getElementById('electionSelect');
+const departmentSelect=document.getElementById('departmentSelect');
+const filterBtn=document.getElementById('filterBtn');
+const electionTitle=document.getElementById('electionTitle');
+const chartViewBtn=document.getElementById('chartViewBtn');
+const tableViewBtn=document.getElementById('tableViewBtn');
+const chartView=document.getElementById('chartView');
+const resultsTableWrap=document.getElementById('resultsTableWrap');
+const resultsTableBody=document.getElementById('resultsTableBody');
+
+function updateElectionDisplay(){
+  const electionKey=electionSelect.value;
+  const deptKey=departmentSelect.value;
+  const data=electionData[electionKey];
+  if(!data)return;
+  electionTitle.textContent=data.title;
+
+  const pieLabels=data.candidates.map(c=>`${c.name}: ${c.pct}%`);
+  const pieValues=data.candidates.map(c=>c.pct);
+  pieChart.data.labels=pieLabels;
+  pieChart.data.datasets[0].data=pieValues;
+  pieChart.update();
+
+  resultsTableBody.innerHTML='';
+  data.candidates.forEach(c=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${c.name}</td><td>${c.pct}%</td>`;
+    resultsTableBody.appendChild(tr);
+  });
+
+  const dv=data.deptVotes;
+  const baseLabels=['Computer Science','Business','Arts'];
+  const baseValues=[dv.cs,dv.business,dv.arts];
+
+  if(deptKey!=='all'){
+    if(['cs','business','arts'].includes(deptKey)){
+      const highlightIndex={cs:0,business:1,arts:2}[deptKey];
+      barChart.data.labels=baseLabels;
+      barChart.data.datasets[0].data=baseValues;
+      barChart.data.datasets[0].backgroundColor=baseLabels.map((_,idx)=>idx===highlightIndex? '#93B1B5':'#B8E3E9');
+    }else{
+      const val=Math.round(baseValues.reduce((a,b)=>a+b,0)/baseValues.length);
+      barChart.data.labels=[deptLabels[deptKey]||'Selected Dept'];
+      barChart.data.datasets[0].data=[val];
+      barChart.data.datasets[0].backgroundColor='#93B1B5';
+    }
+  }else{
+    barChart.data.labels=baseLabels;
+    barChart.data.datasets[0].data=baseValues;
+    barChart.data.datasets[0].backgroundColor='#4F7C82';
+  }
+  barChart.update();
+}
+
+chartViewBtn.addEventListener('click',()=>{
+  chartViewBtn.classList.add('active');
+  tableViewBtn.classList.remove('active');
+  chartView.style.display='grid';
+  resultsTableWrap.classList.remove('active');
+});
+tableViewBtn.addEventListener('click',()=>{
+  tableViewBtn.classList.add('active');
+  chartViewBtn.classList.remove('active');
+  chartView.style.display='none';
+  resultsTableWrap.classList.add('active');
+});
+filterBtn.addEventListener('click',updateElectionDisplay);
+updateElectionDisplay();
+</script>
+
+</body>
+</html>

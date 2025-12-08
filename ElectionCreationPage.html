@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CampusElect - Create Election</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4F7C82;
+      --secondary: #93B1B5;
+      --accent: #B8E3E9;
+      --text: #0B2E33;
+      --bg: #FFFFFF;
+      --muted: #6b7b7d;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 16px; }
+    body { margin:0; font-family:rockwell, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    a { color: inherit; text-decoration: none; }
+    nav { display:flex; justify-content:space-between; align-items:center; padding:18px 8%; background:white; border-bottom:1px solid #e0e0e0; }
+    .nav-logo { font-weight:700; font-size:1.4rem; color:var(--primary); }
+    .nav-links { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .nav-links a { color:#444; font-weight:540; }
+    .nav-links a:hover { color:var(--primary); }
+    .register { background:var(--primary); color:white; padding:8px 12px; border-radius:6px; }
+    .page-header { text-align:center; padding:36px 8%; background: var(--accent); border-bottom:4px solid var(--secondary); }
+    .page-header h1 { color:var(--primary); margin:0; font-size:1.8rem; }
+    .page-header p { margin:8px 0 0; color:var(--muted); }
+    .container { width:94%; max-width:1100px; margin:28px auto 80px; background:var(--bg); border-radius:12px; padding:22px; box-shadow: 0 6px 20px rgba(7,22,24,0.06); border:1px solid var(--accent); }
+    .grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+    .grid-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; }
+    .form-row { margin-bottom:14px; }
+    label { display:block; margin-bottom:6px; color:var(--primary); font-weight:600; }
+    input[type="text"], input[type="datetime-local"], select, textarea { width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--secondary); background:#fbfbfb; font-size:0.98rem; }
+    textarea { min-height:110px; resize:vertical; }
+    .muted { color:var(--muted); font-size:0.9rem; margin-top:6px; }
+    .section { border-radius:8px; padding:14px; margin-bottom:18px; background: linear-gradient(180deg,#fff,#fbfbfb); border:1px solid rgba(0,0,0,0.03); }
+    .section .title { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    .section h3 { margin:0; color:var(--primary); font-size:1.05rem; }
+    .small { font-size:0.9rem; color:var(--muted); }
+    .positions { display:flex; flex-direction:column; gap:12px; }
+    .position-card { border:1px dashed var(--accent); padding:12px; border-radius:8px; background:white; }
+    .position-header { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:8px; }
+    .pos-actions button { margin-left:8px; }
+    .candidate-list { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .candidate-pill { display:flex; gap:8px; align-items:center; padding:8px 10px; border-radius:999px; background:linear-gradient(90deg,var(--accent),#e6f6f8); color:var(--text); border:1px solid var(--secondary); font-size:0.95rem; }
+    .candidate-pill button { background:transparent; border:none; color:#a33; cursor:pointer; margin-left:6px; }
+    .btn { padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+    .btn-primary { background: linear-gradient(90deg,var(--primary),var(--secondary)); color:white; }
+    .btn-outline { background:transparent; border:1px solid var(--primary); color:var(--primary); }
+    .row { display:flex; gap:10px; align-items:center; }
+    .summary { border-left:4px solid var(--accent); padding:12px; border-radius:6px; background:#fff; }
+    footer { background-color: var(--primary); color: white; padding: 18px 8%; }
+    .footer-grid { display:flex; gap:16px; flex-wrap:wrap; justify-content:space-between; }
+    .footer-grid > div { flex:1 1 200px; }
+    .copyright { text-align:center; margin-top:12px; color:#d9e8e9; font-size:0.9rem; }
+    #overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:999; }
+    #popup { display:none; position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); z-index:1000; background:white; padding:20px 26px; border-radius:10px; box-shadow:0 12px 40px rgba(0,0,0,0.3); border:3px solid var(--primary); text-align:center; }
+    #popup h2 { margin:6px 0 8px; color:var(--primary); }
+    #popup p { margin:0; color:var(--muted); }
+    @media (max-width: 980px) { .grid-2 { grid-template-columns: 1fr; } .grid-3 { grid-template-columns: 1fr; } nav { padding:16px 6%; } .page-header { padding:26px 6%; } .container { width:95%; padding:18px; } }
+    @media (max-width:520px) { .nav-links { gap:8px; font-size:0.95rem; } .candidate-pill { font-size:0.85rem; padding:6px 8px; } }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">CampusElect</div>
+    <div class="nav-links">
+      <a href="HomePage.html">Home</a>
+      <a href="AboutUsPage.html">About</a>
+      <a href="VotingPage.html">Vote</a>
+      <a href="ResultsPage.html">Results</a>
+      <a href="ContactPage.html">Contact</a>
+      <a href="AdminLoginPage.html">Administration</a>
+      <a href="LoginPage.html" class="login"><i class="fas fa-sign-in-alt"></i> Login</a>
+      <a href="RegistrationPage.html" class="register"><i class="fas fa-user-plus"></i> Register</a>
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+  <section class="page-header">
+    <h1>Create a New Election</h1>
+    <p>Configure election details, positions, candidates, voter eligibility, and security rules.</p>
+  </section>
+
+  <!-- FORM -->
+  <main class="container" id="mainForm">
+
+    <!-- TOP: election details + schedule -->
+    <div class="section">
+      <div class="title"><h3><i class="fas fa-file-signature"></i> Election Details</h3></div>
+
+      <div class="form-row">
+        <label for="title">Election Title <span style="color:#b23">*</span></label>
+        <input id="title" type="text" placeholder="e.g., Guild President Elections 2025" />
+      </div>
+
+      <div class="form-row">
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Add short description, rules, or notes for voters (optional)"></textarea>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-row">
+          <label for="category">Category</label>
+          <select id="category">
+            <option value="University">University</option>
+            <option value="Secondary">Secondary</option>
+            <option value="Primary">Primary</option>
+            <option value="Club/Department">Club/Department</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="school">School</label>
+          <select id="school"><option value="">Select a school</option></select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-row">
+          <label for="start">Start Date & Time</label>
+          <input id="start" type="datetime-local" />
+        </div>
+        <div class="form-row">
+          <label for="end">End Date & Time</label>
+          <input id="end" type="datetime-local" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ELIGIBILITY -->
+    <div class="section">
+      <div class="title"><h3><i class="fas fa-user-check"></i> Eligible Voters</h3></div>
+      <div class="grid-2">
+        <div>
+          <label for="eligibility">Eligibility</label>
+          <select id="eligibility">
+            <option value="all">All Registered Students</option>
+            <option value="dept">Specific Department</option>
+            <option value="year">Specific Year Group</option>
+            <option value="csv">Custom (Upload CSV of emails)</option>
+          </select>
+          <div id="eligibility-info" class="muted">Choose who may vote in this election.</div>
+        </div>
+        <div id="dept-year-controls" style="display:none;">
+          <label id="dept-year-label">Specify:</label>
+          <input id="deptYearInput" type="text" placeholder="Enter department or year group (comma separated)" />
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <label for="voterCsv">Upload Voter List (CSV - one email per line, header optional)</label>
+        <input id="voterCsv" type="file" accept=".csv,text/csv" />
+        <div id="csvPreview" class="muted" style="margin-top:6px;"></div>
+      </div>
+    </div>
+
+    <!-- SECURITY & RULES -->
+    <div class="section">
+      <div class="title"><h3><i class="fas fa-shield-alt"></i> Security & Voting Rules</h3></div>
+
+      <div class="grid-3">
+        <div>
+          <label for="authMethod">Authentication Method</label>
+          <select id="authMethod">
+            <option>Student Email Login</option>
+            <option>Firebase Authentication</option>
+            <option>Portal-Based Login</option>
+            <option>Single Sign-On (SSO)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="oneVote">One-Person-One-Vote</label>
+          <select id="oneVote">
+            <option value="strict">Strict (no revote)</option>
+            <option value="revote">Allow revoting until close</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="ballotType">Ballot Type</label>
+          <select id="ballotType">
+            <option value="single">Single-choice (one winner)</option>
+            <option value="multi">Multi-choice (pick up to N)</option>
+            <option value="ranked">Ranked-choice</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:12px;">
+        <div>
+          <label for="randomize">Ballot Randomization</label>
+          <select id="randomize">
+            <option value="true">Randomize candidate order</option>
+            <option value="false">Keep candidate order fixed</option>
+          </select>
+        </div>
+        <div>
+          <label for="auditLog">Enable Audit Trail</label>
+          <select id="auditLog">
+            <option value="true">Yes (anonymous logs)</option>
+            <option value="false">No</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- POSITIONS & CANDIDATES -->
+    <div class="section">
+      <div class="title"><h3><i class="fas fa-user-friends"></i> Positions & Candidates</h3></div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
+        <div class="small muted">Add one or more positions. For each position, add candidates and set max winners.</div>
+        <div>
+          <button id="addPositionBtn" class="btn btn-outline"><i class="fas fa-plus"></i> Add Position</button>
+        </div>
+      </div>
+
+      <div id="positionsContainer" class="positions"></div>
+    </div>
+
+    <!-- SUBMIT & SUMMARY -->
+    <div class="section" style="display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap;">
+      <div style="flex:1 1 60%;">
+        <div class="form-row">
+          <label for="adminNotes">Admin Notes (internal)</label>
+          <textarea id="adminNotes" placeholder="Notes for admins/audit (optional)"></textarea>
+        </div>
+        <div class="form-row">
+          <button id="createBtn" class="btn btn-primary"><i class="fas fa-check-circle"></i> Create Election</button>
+        </div>
+      </div>
+      <aside class="summary" style="flex:1 1 35%;">
+        <h4 style="margin:0 0 8px; color:var(--primary);">Preview / Summary</h4>
+        <div id="summaryContent" class="small muted">No election data yet. The preview updates as you type.</div>
+      </aside>
+    </div>
+
+  </main>
+
+  <!-- POPUP -->
+  <div id="overlay"></div>
+  <div id="popup">
+    <h2><i class="fas fa-check-circle"></i> Election successfully created</h2>
+    <p id="popupMsg">Your election has been saved and will appear on the homepage.</p>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <h4>CampusElect</h4>
+        <p>Making campus elections secure, transparent, and accessible.</p>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <a href="HomePage.html">Home</a>
+        <a href="VotingPage.html">Vote</a>
+        <a href="ContactPage.html">Contact</a>
+        <a href="SupportPage.html">Support</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p><i class="fas fa-envelope"></i> info@campuselect.com</p>
+        <p><i class="fas fa-phone"></i> +1 (876) 986-6146</p>
+        <p><i class="fas fa-map-marker-alt"></i> 64 Trafalgar Road<br>New Kingston,<br>Kingston<br>Jamaica</p>
+      </div>
+    </div>
+    <div class="copyright">
+      © 2024 CampusElect. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const $ = (s,r=document)=>r.querySelector(s);
+      const uid = ()=> 'id-'+Math.random().toString(36).slice(2,9);
+
+      // Elements
+      const categorySelect = $('#category');
+      const schoolSelect = $('#school');
+      const addPositionBtn = $('#addPositionBtn');
+      const positionsContainer = $('#positionsContainer');
+      const createBtn = $('#createBtn');
+      const overlay = $('#overlay');
+      const popup = $('#popup');
+      const summaryContent = $('#summaryContent');
+      const eligibility = $('#eligibility');
+      const deptYearControls = $('#dept-year-controls');
+      const deptYearInput = $('#deptYearInput');
+      const voterCsvInput = $('#voterCsv');
+      const csvPreview = $('#csvPreview');
+
+      // Dynamic school lists
+      const schools = {
+        University:['Faculty of Science','Faculty of Engineering','Faculty of Business','Faculty of Arts'],
+        Secondary:['Kingston High','St. Andrew High','Munro College','Campion College'],
+        Primary:['Liguanea Primary','St. George\'s Primary','Hopewell Primary']
+      };
+      function updateSchools() {
+        const list = schools[categorySelect.value] || [];
+        schoolSelect.innerHTML = '<option value="">Select a school</option>';
+        list.forEach(s=>{
+          const opt = document.createElement('option'); opt.value=s; opt.textContent=s;
+          schoolSelect.appendChild(opt);
+        });
+      }
+      categorySelect.addEventListener('change', updateSchools);
+      updateSchools();
+
+      // Eligibility toggle
+      eligibility.addEventListener('change', e=>{
+        deptYearControls.style.display = (e.target.value==='dept' || e.target.value==='year')?'block':'none';
+      });
+
+      // CSV preview
+      voterCsvInput.addEventListener('change', e=>{
+        const file = e.target.files[0];
+        if(!file) return csvPreview.textContent='';
+        const reader = new FileReader();
+        reader.onload = ()=> {
+          csvPreview.textContent = reader.result.slice(0,200)+'...';
+        }
+        reader.readAsText(file);
+      });
+
+      // Add position
+      function createPositionCard() {
+        const posId = uid();
+        const div = document.createElement('div');
+        div.className = 'position-card';
+        div.dataset.id = posId;
+        div.innerHTML = `
+          <div class="position-header">
+            <input type="text" placeholder="Position Name (e.g., President)" class="posName"/>
+            <input type="number" min="1" value="1" class="maxVotes" style="width:80px"/>
+            <div class="pos-actions">
+              <button class="btn btn-outline addCandBtn"><i class="fas fa-user-plus"></i> Add Candidate</button>
+              <button class="btn btn-outline removePosBtn"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+          <div class="candidate-list"></div>
+        `;
+        positionsContainer.appendChild(div);
+
+        const addCandBtn = div.querySelector('.addCandBtn');
+        const removePosBtn = div.querySelector('.removePosBtn');
+        const candidateList = div.querySelector('.candidate-list');
+
+        addCandBtn.addEventListener('click', ()=> {
+          const candName = prompt('Candidate Name:');
+          if(candName) {
+            const span = document.createElement('span');
+            span.className='candidate-pill';
+            span.textContent=candName;
+            const rmBtn = document.createElement('button'); rmBtn.innerHTML='&times;';
+            rmBtn.onclick=()=>span.remove();
+            span.appendChild(rmBtn);
+            candidateList.appendChild(span);
+            updateSummary();
+          }
+        });
+
+        removePosBtn.addEventListener('click', ()=>{ div.remove(); updateSummary(); });
+
+        // update summary on changes
+        div.querySelector('.posName').addEventListener('input', updateSummary);
+        div.querySelector('.maxVotes').addEventListener('input', updateSummary);
+      }
+
+      addPositionBtn.addEventListener('click', createPositionCard);
+
+      function gatherData() {
+        const positions = [];
+        positionsContainer.querySelectorAll('.position-card').forEach(pos=>{
+          const posName = pos.querySelector('.posName').value.trim();
+          const maxVotes = parseInt(pos.querySelector('.maxVotes').value);
+          const candidates = Array.from(pos.querySelectorAll('.candidate-pill')).map(c=>c.firstChild.textContent);
+          if(posName) positions.push({posName,maxVotes,candidates});
+        });
+        return {
+          id: Date.now(),
+          title: $('#title').value.trim(),
+          description: $('#description').value.trim(),
+          category: $('#category').value,
+          school: $('#school').value,
+          start: $('#start').value,
+          end: $('#end').value,
+          eligibility: eligibility.value,
+          deptYear: deptYearInput.value,
+          authMethod: $('#authMethod').value,
+          oneVote: $('#oneVote').value,
+          ballotType: $('#ballotType').value,
+          randomize: $('#randomize').value,
+          auditLog: $('#auditLog').value,
+          positions: positions,
+          adminNotes: $('#adminNotes').value,
+          status:'active'
+        };
+      }
+
+      // Summary
+      function updateSummary() {
+        const data = gatherData();
+        summaryContent.innerHTML = `
+          <strong>${data.title || 'No title yet'}</strong><br>
+          School: ${data.school || 'N/A'}<br>
+          Category: ${data.category}<br>
+          Positions: ${data.positions.length}<br>
+          ${data.positions.map(p=>`${p.posName} (${p.candidates.length} candidates)`).join('<br>')}
+        `;
+      }
+      $('#title').addEventListener('input', updateSummary);
+      $('#school').addEventListener('change', updateSummary);
+      $('#category').addEventListener('change', updateSummary);
+
+      // CREATE
+      createBtn.addEventListener('click', ()=>{
+        const data = gatherData();
+        const existing = JSON.parse(localStorage.getItem('elections')||'[]');
+        existing.push(data);
+        localStorage.setItem('elections', JSON.stringify(existing));
+
+        overlay.style.display='block';
+        popup.style.display='block';
+        setTimeout(()=>{
+          overlay.style.display='none';
+          popup.style.display='none';
+          window.location.href='HomePage.html';
+        },1800);
+      });
+
+    })();
+  </script>
+</body>
+</html>

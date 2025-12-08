@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CampusElect Help Center</title>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+:root{
+  --purple:#6D28D9;
+  --cyan:#06B6D4;
+  --lavender:#C4B5FD;
+  --text:#1E293B;
+  --bg:#F8FAFC;
+  --radius-s:6px;
+  --radius-m:12px;
+  --radius-l:16px;
+  --shadow-card:0 2px 10px rgba(0,0,0,.08);
+  --shadow-card-hover:0 4px 18px rgba(0,0,0,.12);
+  --trans-fast:.18s;
+  --trans-med:.28s;
+  --max-w:1200px;
+}
+
+/* Reset-ish */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{
+  font-family:rockwell;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.5;
+}
+
+/* Utility */
+.visually-hidden{position:absolute !important;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+
+/* Layout wrappers */
+.wrapper{max-width:var(--max-w);margin:0 auto;padding:0 5vw;}
+.section{padding:4rem 0;}
+.section-tight{padding:2.5rem 0;}
+.section-header{margin-bottom:2rem;text-align:left;}
+.section-header.center{text-align:center;}
+.section-header h2{font-size:1.8rem;font-weight:700;color:var(--text);margin-bottom:.5rem;}
+.section-header p{color:#475569;font-size:1rem;}
+
+/* Top Nav */
+.topbar{
+  width:100%;
+  background:#fff;
+  border-bottom:1px solid #e2e8f0;
+  padding:.75rem 5vw;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:.75rem;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+.brand{
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--purple);
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.topnav{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  flex-wrap:wrap;
+}
+.topnav a{
+  padding:.4rem 1rem;
+  border-radius:999px;
+  font-size:.95rem;
+  text-decoration:none;
+  color:var(--text);
+  transition:background var(--trans-fast),color var(--trans-fast);
+}
+.topnav a:hover{background:rgba(6,182,212,.12);color:var(--purple);}
+.topnav a.active{background:var(--cyan);color:#fff;}
+
+.nav-search{
+  position:relative;
+  width:180px;
+  max-width:100%;
+}
+.nav-search input{
+  width:100%;
+  padding:.4rem 2rem .4rem .75rem;
+  border:1px solid #cbd5e1;
+  border-radius:999px;
+  font-size:.9rem;
+  color:var(--text);
+  background:#fff;
+  transition:border var(--trans-fast),box-shadow var(--trans-fast);
+}
+.nav-search input:focus{
+  outline:none;
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px rgba(109,40,217,.25);
+}
+.nav-search button{
+  position:absolute;
+  top:50%;
+  right:.5rem;
+  transform:translateY(-50%);
+  background:none;
+  border:none;
+  color:var(--purple);
+  cursor:pointer;
+  font-size:1rem;
+  line-height:1;
+}
+
+/* Hero */
+.hero{
+  padding:5rem 5vw 4rem;
+  text-align:center;
+  background:linear-gradient(to bottom,rgba(109,40,217,.08) 0%,rgba(6,182,212,.05) 100%);
+}
+.hero h1{
+  font-size:2.25rem;
+  font-weight:700;
+  margin-bottom:.75rem;
+  color:var(--text);
+}
+.hero p{
+  font-size:1.1rem;
+  color:#475569;
+  margin-bottom:2rem;
+}
+.hero-search{
+  max-width:500px;
+  margin:0 auto;
+  position:relative;
+}
+.hero-search input{
+  width:100%;
+  padding:1rem 3rem 1rem 1.25rem;
+  font-size:1rem;
+  border:1px solid var(--lavender);
+  border-radius:999px;
+  background:#fff;
+  transition:border var(--trans-fast),box-shadow var(--trans-fast);
+}
+.hero-search input:focus{
+  outline:none;
+  border-color:var(--purple);
+  box-shadow:0 0 0 4px rgba(109,40,217,.25);
+}
+.hero-search button{
+  position:absolute;
+  top:50%;
+  right:1rem;
+  transform:translateY(-50%);
+  background:var(--purple);
+  border:none;
+  color:#fff;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background var(--trans-fast);
+}
+.hero-search button:hover{background:var(--cyan);}
+
+/* Video Tutorials */
+.video-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1.5rem;
+}
+.video-card{
+  background:#fff;
+  border-radius:var(--radius-m);
+  overflow:hidden;
+  box-shadow:var(--shadow-card);
+  cursor:pointer;
+  transition:transform var(--trans-fast),box-shadow var(--trans-fast);
+  display:flex;
+  flex-direction:column;
+}
+.video-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-card-hover);
+}
+.video-thumb-wrap{
+  position:relative;
+  aspect-ratio:16/9;
+  width:100%;
+  overflow:hidden;
+}
+.video-thumb-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.video-thumb-wrap .play-btn{
+  position:absolute;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  font-size:2rem;
+  background:rgba(0,0,0,.25);
+  transition:background var(--trans-fast),transform var(--trans-fast);
+}
+.video-card:hover .play-btn{
+  background:rgba(0,0,0,.35);
+  transform:scale(1.05);
+}
+.video-meta{
+  padding:1rem;
+  flex-grow:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+.video-meta h3{
+  font-size:1.05rem;
+  font-weight:600;
+  margin-bottom:.5rem;
+  color:var(--text);
+}
+.video-meta .meta-line{
+  font-size:.85rem;
+  color:#64748b;
+  display:flex;
+  gap:.75rem;
+}
+
+/* Quick Start Guide */
+.quick-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1.5rem;
+}
+.quick-card{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:var(--radius-m);
+  padding:1.5rem;
+  box-shadow:var(--shadow-card);
+  cursor:pointer;
+  transition:transform var(--trans-fast),box-shadow var(--trans-fast),border var(--trans-fast);
+  text-align:left;
+}
+.quick-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-card-hover);
+  border-color:var(--cyan);
+}
+.quick-card i{font-size:1.5rem;color:var(--purple);margin-bottom:1rem;}
+.quick-card h3{font-size:1.1rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.quick-card p{font-size:.95rem;color:#64748b;}
+
+/* FAQ */
+.faq-list{
+  max-width:700px;
+  margin:0 auto;
+}
+.faq-item{
+  border-bottom:1px solid #e2e8f0;
+}
+.faq-item button{
+  width:100%;
+  text-align:left;
+  background:none;
+  border:none;
+  padding:1rem 0;
+  font-size:1rem;
+  font-weight:600;
+  color:var(--text);
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+}
+.faq-item button:hover{color:var(--purple);}
+.faq-item button i{color:var(--cyan);transition:transform var(--trans-fast);}
+.faq-item.open button i{transform:rotate(180deg);}
+.faq-content{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height var(--trans-med) ease,padding var(--trans-fast);
+  padding:0;
+  color:#475569;
+}
+.faq-item.open .faq-content{
+  padding:0 0 1rem 0;
+  max-height:200px; /* large enough */
+}
+
+/* Troubleshooting */
+.ts-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;
+  max-width:700px;
+  margin:0 auto;
+}
+.ts-card{
+  background:#fff;
+  border-radius:var(--radius-m);
+  box-shadow:var(--shadow-card);
+  padding:2rem 1.5rem;
+  text-align:left;
+  transition:transform var(--trans-fast),box-shadow var(--trans-fast);
+  cursor:pointer;
+}
+.ts-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-card-hover);}
+.ts-card i{font-size:2rem;color:var(--purple);margin-bottom:1rem;}
+.ts-card h3{font-size:1.2rem;font-weight:600;margin-bottom:.5rem;color:var(--text);}
+.ts-card p{font-size:.95rem;color:#64748b;margin-bottom:1rem;}
+.ts-card .learn-more{
+  font-size:.95rem;
+  color:var(--cyan);
+  text-decoration:none;
+  font-weight:600;
+}
+.ts-card .learn-more:hover{text-decoration:underline;}
+
+/* Contact Support */
+.contact-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;
+  align-items:start;
+}
+@media(max-width:768px){
+  .contact-grid{grid-template-columns:1fr;gap:2rem;}
+}
+
+/* success banner */
+.success-banner{
+  display:none;
+  margin-bottom:1.5rem;
+  padding:1rem 1.25rem;
+  border-left:4px solid var(--cyan);
+  border:1px solid rgba(6,182,212,.4);
+  background:rgba(6,182,212,.15);
+  border-radius:var(--radius-s);
+  font-size:1rem;
+  font-weight:600;
+  color:var(--text);
+  align-items:center;
+  gap:.75rem;
+}
+.success-banner.show{
+  display:flex;
+  animation:bannerSlide .25s ease-out;
+}
+.success-banner i{color:var(--purple);}
+.success-banner button.banner-close{
+  margin-left:auto;
+  border:none;
+  background:none;
+  color:var(--purple);
+  cursor:pointer;
+  font-size:1.1rem;
+  padding:.25rem;
+  line-height:1;
+  transition:color var(--trans-fast),transform var(--trans-fast);
+}
+.success-banner button.banner-close:hover{
+  color:var(--cyan);
+  transform:scale(1.1);
+}
+@keyframes bannerSlide{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+
+/* error messages */
+.error-message{
+  color:#d32f2f;
+  font-size:.85rem;
+  margin-top:.3rem;
+  display:none;
+}
+input.error,select.error,textarea.error{
+  border-color:#d32f2f;
+  box-shadow:0 0 0 2px rgba(211,47,47,.2);
+}
+
+.contact-form .form-field{
+  margin-bottom:1.25rem;
+}
+.contact-form label{
+  display:block;
+  font-size:.95rem;
+  font-weight:600;
+  margin-bottom:.4rem;
+}
+.contact-form input,
+.contact-form select,
+.contact-form textarea{
+  width:100%;
+  padding:.75rem 1rem;
+  font-size:1rem;
+  border:1px solid #cbd5e1;
+  border-radius:var(--radius-s);
+  background:#fff;
+  color:var(--text);
+  transition:border var(--trans-fast),box-shadow var(--trans-fast);
+}
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus{
+  outline:none;
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px rgba(109,40,217,.25);
+}
+.contact-form textarea{min-height:140px;resize:vertical;}
+.contact-form button{
+  padding:1rem 2rem;
+  background:var(--purple);
+  border:none;
+  border-radius:var(--radius-s);
+  color:#fff;
+  font-size:1rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:background var(--trans-fast),transform var(--trans-fast);
+}
+.contact-form button:hover{background:var(--cyan);transform:translateY(-1px);}
+
+/* Contact Alt */
+.contact-alt h3{
+  font-size:1.25rem;
+  font-weight:700;
+  margin-bottom:1.25rem;
+}
+.contact-alt ul{list-style:none;display:grid;gap:1.5rem;}
+.contact-alt li{display:flex;align-items:flex-start;gap:.75rem;font-size:1rem;color:#475569;}
+.contact-alt li i{color:var(--cyan);font-size:1.25rem;margin-top:.1rem;}
+.contact-alt strong{color:var(--text);display:block;margin-bottom:.15rem;}
+.contact-alt small{font-size:.9rem;color:#64748b;}
+
+/* Footer */
+.site-footer{
+  background:var(--purple);
+  color:#fff;
+  margin-top:5rem;
+  padding:4rem 5vw 3rem;
+}
+.footer-grid{
+  max-width:var(--max-w);
+  margin:0 auto 2rem;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:2rem;
+}
+.footer-grid h4{
+  margin-bottom:1rem;
+  font-size:1.05rem;
+  font-weight:700;
+  color:#fff;
+}
+.footer-grid p,
+.footer-grid a{
+  font-size:.95rem;
+  color:#fff;
+  text-decoration:none;
+  line-height:1.6;
+  margin-bottom:.5rem;
+  transition:color var(--trans-fast);
+}
+.footer-grid a:hover{color:var(--cyan);}
+.footer-grid i{
+  color:var(--cyan);
+  margin-right:.4rem;
+  transition:color var(--trans-fast);
+}
+.footer-grid a:hover i{color:#fff;}
+.footer-grid .socials a{display:inline-block;margin-right:.5rem;font-size:1.25rem;}
+
+footer .copyright{
+  text-align:center;
+  font-size:.85rem;
+  color:#e2e8f0;
+}
+
+/* Popup */
+.popup-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  justify-content:center;
+  align-items:flex-end;
+  padding:1.5rem;
+  z-index:999;
+}
+.popup-overlay.show{display:flex;animation:fadeBg .25s ease-out;}
+.popup-card{
+  width:min(480px,100%);
+  background:#fff;
+  border-radius:var(--radius-l);
+  padding:2rem 1.5rem 2.25rem;
+  text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,.25);
+  border:2px solid var(--purple);
+  transform:translateY(40px);
+  opacity:0;
+  animation:slidePopup .35s ease-out forwards;
+}
+.popup-card .icon-wrap{
+  font-size:3rem;
+  margin-bottom:.75rem;
+  background:linear-gradient(135deg,var(--purple) 0%,var(--cyan) 100%);
+  -webkit-text-fill-color:transparent;
+}
+.popup-card h3{
+  font-size:1.5rem;
+  margin-bottom:.5rem;
+  color:var(--purple);
+}
+.popup-card p{
+  margin-bottom:1.5rem;
+  color:var(--text);
+  font-size:1rem;
+}
+.popup-card button{
+  padding:.75rem 1.75rem;
+  font-size:1rem;
+  border:none;
+  border-radius:var(--radius-s);
+  cursor:pointer;
+  background:linear-gradient(90deg,var(--purple),var(--cyan));
+  color:#fff;
+  font-weight:600;
+  transition:opacity var(--trans-fast);
+}
+.popup-card button:hover{opacity:.9;}
+
+@keyframes fadeBg{from{opacity:0;}to{opacity:1;}}
+@keyframes slidePopup{0%{opacity:0;transform:translateY(60px) scale(.98);}
+100%{opacity:1;transform:translateY(0) scale(1);}}
+
+/* Responsive tweaks */
+@media(max-width:600px){
+  .hero h1{font-size:1.9rem;}
+  .video-meta h3{font-size:1rem;}
+  .section{padding:3rem 0;}
+}
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<header class="topbar">
+  <div class="brand"><i class="fa-solid fa-square-poll-vertical"></i>CampusElect</div>
+  <nav class="topnav">
+    <a href="HomePage.html">Home</a>
+    <a href="VotingPage.html">Elections</a>
+    <a href="HelpCenter.html" class="active">Training &amp; Help</a>
+    <a href="Contact.html">Contact</a>
+  </nav>
+  <form class="nav-search" id="navSearchForm" role="search" aria-label="Site search">
+    <label class="visually-hidden" for="navSearchInput">Search</label>
+    <input type="search" id="navSearchInput" placeholder="Search..." />
+    <button type="submit" aria-label="Search"><i class="fa fa-search"></i></button>
+  </form>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <h1>Welcome to CampusElect Help Center</h1>
+  <p>Everything you need to know about running and participating in elections.</p>
+  <form class="hero-search" id="heroSearchForm" role="search" aria-label="Help Center search">
+    <label class="visually-hidden" for="heroSearchInput">Search help articles</label>
+    <input type="search" id="heroSearchInput" placeholder="Search for help articles..." />
+    <button type="submit" aria-label="Search"><i class="fa fa-search"></i></button>
+  </form>
+</section>
+
+<!-- Video Tutorials -->
+<section class="section" id="video-tutorials">
+  <div class="wrapper">
+    <div class="section-header"><h2>Video Tutorials</h2></div>
+    <div class="video-grid">
+      <article class="video-card" data-video="getting-started">
+        <div class="video-thumb-wrap">
+          <img src="Images/video-placeholder-1.jpg" alt="Getting Started with CampusElect">
+          <span class="play-btn"><i class="fa-solid fa-play"></i></span>
+        </div>
+        <div class="video-meta">
+          <h3>Getting Started with CampusElect</h3>
+          <div class="meta-line"><span>5:20</span> • <span>Beginner</span></div>
+        </div>
+      </article>
+
+      <article class="video-card" data-video="creating-election">
+        <div class="video-thumb-wrap">
+          <img src="Images/video-placeholder-2.jpg" alt="Creating Your First Election">
+          <span class="play-btn"><i class="fa-solid fa-play"></i></span>
+        </div>
+        <div class="video-meta">
+          <h3>Creating Your First Election</h3>
+          <div class="meta-line"><span>8:15</span> • <span>Intermediate</span></div>
+        </div>
+      </article>
+
+      <article class="video-card" data-video="manage-voters">
+        <div class="video-thumb-wrap">
+          <img src="Images/video-placeholder-3.jpg" alt="Managing Voter Registration">
+          <span class="play-btn"><i class="fa-solid fa-play"></i></span>
+        </div>
+        <div class="video-meta">
+          <h3>Managing Voter Registration</h3>
+          <div class="meta-line"><span>6:45</span> • <span>Intermediate</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Start Guide -->
+<section class="section" id="quick-start">
+  <div class="wrapper">
+    <div class="section-header"><h2>Quick Start Guide</h2></div>
+    <div class="quick-grid">
+      <div class="quick-card" data-guide="access">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        <h3>System Access</h3>
+        <p>Learn how to access and navigate the platform.</p>
+      </div>
+      <div class="quick-card" data-guide="profile">
+        <i class="fa-solid fa-gear"></i>
+        <h3>Setting Up Your Profile</h3>
+        <p>Configure your account and preferences.</p>
+      </div>
+      <div class="quick-card" data-guide="create-election">
+        <i class="fa-solid fa-chart-line"></i>
+        <h3>Creating an Election</h3>
+        <p>Step-by-step guide to create your first election.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQs -->
+<section class="section" id="faqs">
+  <div class="wrapper">
+    <div class="section-header"><h2>Frequently Asked Questions</h2></div>
+    <div class="faq-list" role="list">
+      <div class="faq-item" data-faq>
+        <button type="button" aria-expanded="false">
+          <span>How do I reset my password?</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="faq-content">
+          Reset your password from the login page using the “Forgot password?” link. You’ll receive an email with reset instructions. If you don’t see it, check spam.
+        </div>
+      </div>
+      <div class="faq-item" data-faq>
+        <button type="button" aria-expanded="false">
+          <span>Can I edit an election after publishing?</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="faq-content">
+          Limited edits (dates, descriptions) are allowed before voting starts. Once voting begins, structural changes (candidates, positions) are locked.
+        </div>
+      </div>
+      <div class="faq-item" data-faq>
+        <button type="button" aria-expanded="false">
+          <span>How do I export election results?</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="faq-content">
+          Go to Results &gt; select your election &gt; click “Download Report” for CSV or PDF exports including vote counts and participation.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Troubleshooting -->
+<section class="section" id="troubleshooting">
+  <div class="wrapper">
+    <div class="section-header"><h2>Troubleshooting</h2></div>
+    <div class="ts-grid">
+      <div class="ts-card" data-ts="security">
+        <i class="fa-solid fa-shield-halved"></i>
+        <h3>Security Issues</h3>
+        <p>Solutions for login problems and account security.</p>
+        <span class="learn-more">Learn more &raquo;</span>
+      </div>
+      <div class="ts-card" data-ts="technical">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <h3>Technical Problems</h3>
+        <p>Common technical issues and their solutions.</p>
+        <span class="learn-more">Learn more &raquo;</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Support -->
+<section class="section" id="contact-support">
+  <div class="wrapper">
+    <div class="section-header"><h2>Contact Support</h2></div>
+
+    <div class="contact-grid">
+      <!-- Left: Success Banner + Form -->
+      <div>
+        <!-- Success Banner -->
+        <div id="successBanner" class="success-banner" role="alert" aria-live="polite">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Your support request was sent. We'll reach out soon.</span>
+          <button type="button" class="banner-close" aria-label="Dismiss message"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Form -->
+        <form class="contact-form" id="supportForm" novalidate>
+          <div class="form-field">
+            <label for="supportName">Name</label>
+            <input type="text" id="supportName" aria-describedby="errName" required>
+            <small id="errName" class="error-message"></small>
+          </div>
+          <div class="form-field">
+            <label for="supportEmail">Email</label>
+            <input type="email" id="supportEmail" aria-describedby="errEmail" required>
+            <small id="errEmail" class="error-message"></small>
+          </div>
+          <div class="form-field">
+            <label for="supportCategory">Issue Category</label>
+            <select id="supportCategory" aria-describedby="errCat" required>
+              <option value="">Select category</option>
+              <option value="login">Login / Account</option>
+              <option value="election">Election Setup</option>
+              <option value="results">Results / Reporting</option>
+              <option value="technical">Technical Issue</option>
+              <option value="other">Other</option>
+            </select>
+            <small id="errCat" class="error-message"></small>
+          </div>
+          <div class="form-field">
+            <label for="supportMessage">Message</label>
+            <textarea id="supportMessage" aria-describedby="errMsg" required></textarea>
+            <small id="errMsg" class="error-message"></small>
+          </div>
+          <button type="submit"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
+        </form>
+      </div>
+
+      <!-- Right: Alternate Contact Methods -->
+      <div class="contact-alt">
+        <h3>Other Ways to Get Help</h3>
+        <ul>
+          <li>
+            <i class="fa-solid fa-envelope"></i>
+            <span><strong>Email Support</strong>support@campuselect.com</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-phone"></i>
+            <span><strong>Phone Support</strong>Available Mon–Fri, 9AM–5PM EST</span>
+          </li>
+          <li>
+            <i class="fa-solid fa-comments"></i>
+            <span><strong>Live Chat</strong>Chat with our support team</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div>
+      <h4>CampusElect</h4>
+      <p>Making campus elections secure, transparent, and accessible.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="#"><i class="fa-solid fa-list-check"></i> Features</a>
+      <a href="#"><i class="fa-solid fa-shield-halved"></i> Security</a>
+      <a href="#"><i class="fa-solid fa-tags"></i> Pricing</a>
+      <a href="#"><i class="fa-solid fa-bell"></i> Updates</a>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <a href="#contact-support"><i class="fa-solid fa-circle-question"></i> Help Center</a>
+      <a href="#"><i class="fa-solid fa-book"></i> Documentation</a>
+      <a href="#contact-support"><i class="fa-solid fa-envelope"></i> Contact</a>
+      <a href="#"><i class="fa-solid fa-signal"></i> Status</a>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <a href="#"><i class="fa-solid fa-user-secret"></i> Privacy</a>
+      <a href="#"><i class="fa-solid fa-file-contract"></i> Terms</a>
+      <a href="#"><i class="fa-solid fa-lock"></i> Security</a>
+      <a href="#"><i class="fa-solid fa-scale-balanced"></i> Compliance</a>
+    </div>
+    <div>
+      <h4>Follow</h4>
+      <div class="socials">
+        <a href="#"><i class="fab fa-twitter" aria-label="Twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin" aria-label="LinkedIn"></i></a>
+        <a href="#"><i class="fab fa-facebook" aria-label="Facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram" aria-label="Instagram"></i></a>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">© 2024 CampusElect. All rights reserved.</div>
+</footer>
+
+<!-- Success Popup (optional manual trigger) -->
+<div class="popup-overlay" id="popupSuccess" role="dialog" aria-modal="true" aria-labelledby="popupTitle" aria-describedby="popupDesc">
+  <div class="popup-card">
+    <div class="icon-wrap"><i class="fa-solid fa-check-circle"></i></div>
+    <h3 id="popupTitle">Request Submitted</h3>
+    <p id="popupDesc">Thanks! Our support team will reach out soon.</p>
+    <button type="button" onclick="closePopup()"><i class="fa-solid fa-xmark"></i> Close</button>
+  </div>
+</div>
+
+<script>
+/* ---------- Query Helpers ---------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+/* ---------- Highlighting Styles ---------- */
+const style = document.createElement("style");
+style.textContent = `
+  mark.highlight {
+    background: yellow;
+    color: black;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+`;
+document.head.appendChild(style);
+
+/* ---------- Search & Highlight ---------- */
+function removeHighlights() {
+  $$("mark.highlight").forEach(mark => {
+    const parent = mark.parentNode;
+    parent.replaceChild(document.createTextNode(mark.textContent), mark);
+    parent.normalize();
+  });
+}
+
+function highlightTerm(term) {
+  if (!term) return;
+  const regex = new RegExp(`(${term})`, "gi");
+
+  function walk(node) {
+    if (node.nodeType === 3) {
+      const match = node.nodeValue.match(regex);
+      if (match) {
+        const span = document.createElement("span");
+        span.innerHTML = node.nodeValue.replace(regex, `<mark class="highlight">$1</mark>`);
+        node.replaceWith(span);
+      }
+    } else if (node.nodeType === 1 && node.childNodes && !["SCRIPT", "STYLE"].includes(node.tagName)) {
+      for (let i = 0; i < node.childNodes.length; i++) {
+        walk(node.childNodes[i]);
+      }
+    }
+  }
+  walk(document.body);
+}
+
+function handleSearch(query) {
+  removeHighlights();
+  if (!query.trim()) return;
+  highlightTerm(query.trim());
+  const firstMark = document.querySelector("mark.highlight");
+  if (firstMark) {
+    firstMark.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+}
+
+/* ---------- Search forms ---------- */
+$('#navSearchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = $('#navSearchInput').value.trim();
+  handleSearch(q);
+});
+
+$('#heroSearchForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const q = $('#heroSearchInput').value.trim();
+  handleSearch(q);
+});
+
+/* ---------- Video Cards ---------- */
+$$('.video-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const vid = card.dataset.video;
+    alert('Open video: ' + vid);
+  });
+});
+
+/* ---------- Quick Start Cards ---------- */
+$$('.quick-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const guide = card.dataset.guide;
+    alert('Open guide: ' + guide);
+  });
+});
+
+/* ---------- Troubleshooting Cards ---------- */
+$$('.ts-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const ts = card.dataset.ts;
+    alert('Open troubleshooting topic: ' + ts);
+  });
+});
+
+/* ---------- FAQ Accordion ---------- */
+$$('[data-faq]').forEach(item => {
+  const btn = item.querySelector('button');
+  btn.addEventListener('click', () => {
+    const open = item.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+});
+
+/* ---------- Contact Form Validation ---------- */
+const supportForm = $('#supportForm');
+const successBanner = $('#successBanner');
+const bannerCloseBtn = successBanner.querySelector('.banner-close');
+
+const fields = {
+  name: $('#supportName'),
+  email: $('#supportEmail'),
+  category: $('#supportCategory'),
+  message: $('#supportMessage')
+};
+const errors = {
+  name: $('#errName'),
+  email: $('#errEmail'),
+  category: $('#errCat'),
+  message: $('#errMsg')
+};
+
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function showError(input, errorEl, message) {
+  input.classList.add('error');
+  input.setAttribute('aria-invalid', 'true');
+  errorEl.textContent = message;
+  errorEl.style.display = 'block';
+}
+function clearError(input, errorEl) {
+  input.classList.remove('error');
+  input.removeAttribute('aria-invalid');
+  errorEl.textContent = '';
+  errorEl.style.display = 'none';
+}
+
+function validateForm() {
+  let valid = true;
+  if (fields.name.value.trim() === '') {
+    showError(fields.name, errors.name, 'Name is required.');
+    valid = false;
+  } else clearError(fields.name, errors.name);
+
+  const em = fields.email.value.trim();
+  if (em === '') {
+    showError(fields.email, errors.email, 'Email is required.');
+    valid = false;
+  } else if (!validateEmail(em)) {
+    showError(fields.email, errors.email, 'Enter a valid email address.');
+    valid = false;
+  } else clearError(fields.email, errors.email);
+
+  if (fields.category.value === '') {
+    showError(fields.category, errors.category, 'Please select a category.');
+    valid = false;
+  } else clearError(fields.category, errors.category);
+
+  if (fields.message.value.trim().length < 10) {
+    showError(fields.message, errors.message, 'Message must be at least 10 characters.');
+    valid = false;
+  } else clearError(fields.message, errors.message);
+
+  return valid;
+}
+
+fields.name.addEventListener('input', validateForm);
+fields.email.addEventListener('input', validateForm);
+fields.category.addEventListener('change', validateForm);
+fields.message.addEventListener('input', validateForm);
+
+supportForm.addEventListener('submit', e => {
+  e.preventDefault();
+  if (validateForm()) {
+    showBanner();
+    supportForm.reset();
+    validateForm();
+  } else {
+    const firstErr = supportForm.querySelector('.error');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+});
+
+/* ---------- Success Banner ---------- */
+let bannerTimer = null;
+function showBanner() {
+  successBanner.classList.add('show');
+  clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(hideBanner, 5000);
+  successBanner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function hideBanner() {
+  successBanner.classList.remove('show');
+}
+bannerCloseBtn.addEventListener('click', hideBanner);
+
+/* ---------- Popup (Optional) ---------- */
+function showPopup() { $('#popupSuccess').classList.add('show'); }
+function closePopup() { $('#popupSuccess').classList.remove('show'); }
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Council Voting | CampusElect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --primary: #4F7C82;
+      --secondary: #93B1B5;
+      --accent: #B8E3E9;
+      --text: #0B2E33;
+      --bg: #FFFFFF;
+      --error: #E74C3C;
+      --muted: #64748B;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: rockwell;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    html { font-size: 16px; font-weight: 200; }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 10%;
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .nav-logo { display: flex; align-items: center; font-size: 1.5rem; font-weight: bold; }
+
+    .nav-links a {
+      font-weight: 540;
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      opacity: 0.8;
+      pointer-events: auto;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a i { margin-right: 6px; color: white; }
+
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .timer {
+      color: var(--secondary);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .instructions {
+      background: var(--accent);
+      border: 1px solid var(--secondary);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .instructions ul { list-style: disc; padding-left: 20px; }
+
+    .position {
+      background: var(--bg);
+      border: 1px solid var(--secondary);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    .position h2 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    .candidate {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      padding: 8px;
+      border-radius: 6px;
+    }
+
+    .candidate:hover { background-color: var(--accent); }
+
+    .candidate img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-right: 15px;
+      border: 2px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    .candidate input[type="radio"]:checked + img {
+      border-color: var(--primary);
+    }
+
+    .candidate label {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      gap: 12px;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .candidate input[type="radio"] {
+      cursor: pointer;
+      accent-color: var(--primary);
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .candidate small {
+      color: var(--secondary);
+      font-weight: 400;
+      font-size: 0.85rem;
+      display: block;
+    }
+
+    .review-box {
+      background: var(--accent);
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+      color: var(--text);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .button-group {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      min-width: 120px;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-btn {
+      background-color: var(--primary);
+      color: white;
+    }
+    .submit-btn:hover { background-color: var(--secondary); }
+
+    .save-btn {
+      background-color: var(--secondary);
+      color: var(--bg);
+    }
+    .save-btn:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    footer {
+      background-color: var(--accent);
+      text-align: center;
+      padding: 30px 10%;
+      font-size: 0.9rem;
+      margin-top: 40px;
+      color: var(--text);
+    }
+
+    footer a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: var(--primary);
+    }
+    footer a:hover { text-decoration: underline; color: var(--secondary); }
+
+    @media (max-width: 768px) {
+      .candidate { flex-direction: column; align-items: flex-start; }
+      .candidate img { margin-bottom: 10px; }
+      nav { flex-wrap: wrap; justify-content: flex-end; font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav Bar -->
+  <nav>
+    <div class="nav-logo">CampusElect</div>
+    <div class="nav-links">
+      <a href="HomePage.html"><i class="fas fa-home"></i> Home</a>
+      <a href="#">Active Elections</a>
+      <a href="ResultsPage.html">Results</a>
+      <a href="#">Help</a>
+      <a href="#"><i class="fa-solid fa-user"></i> John Smith</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Current Election: Student Council 2024</h1>
+    <p class="timer"><i class="fa-regular fa-clock"></i> Voting closes in 2h 45m</p>
+
+    <div class="instructions">
+      <strong>Important Instructions:</strong>
+      <ul>
+        <li>Select one candidate per position</li>
+        <li>Review your choices before submission</li>
+        <li>Your vote is anonymous and secure</li>
+        <li>You cannot change your vote after submission</li>
+      </ul>
+    </div>
+
+    <form id="voteForm">
+      <!-- PRESIDENT -->
+      <div class="position">
+        <h2>President</h2>
+        <div class="candidate">
+          <label>
+            <input type="radio" name="president" value="Sarah Johnson" />
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Sarah Johnson" />
+            <div>
+              <strong>Sarah Johnson</strong><br />
+              <small>Focusing on sustainable campus initiatives and improved student services</small>
+            </div>
+          </label>
+        </div>
+        <div class="candidate">
+          <label>
+            <input type="radio" name="president" value="Michael Chen" />
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael Chen" />
+            <div>
+              <strong>Michael Chen</strong><br />
+              <small>Advocating for academic excellence and inclusive student community</small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- VICE PRESIDENT -->
+      <div class="position">
+        <h2>Vice President</h2>
+        <div class="candidate">
+          <label>
+            <input type="radio" name="vp" value="Emily Rodriguez" />
+            <img src="https://randomuser.me/api/portraits/women/72.jpg" alt="Emily Rodriguez" />
+            <div>
+              <strong>Emily Rodriguez</strong><br />
+              <small>Building stronger connections between faculty and students</small>
+            </div>
+          </label>
+        </div>
+        <div class="candidate">
+          <label>
+            <input type="radio" name="vp" value="David Park" />
+            <img src="https://randomuser.me/api/portraits/men/64.jpg" alt="David Park" />
+            <div>
+              <strong>David Park</strong><br />
+              <small>Enhancing campus life through cultural events and activities</small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- SECRETARY -->
+      <div class="position">
+        <h2>Secretary</h2>
+        <div class="candidate">
+          <label>
+            <input type="radio" name="secretary" value="Lisa Thompson" />
+            <img src="https://randomuser.me/api/portraits/women/23.jpg" alt="Lisa Thompson" />
+            <div>
+              <strong>Lisa Thompson</strong><br />
+              <small>Implementing efficient communication systems for student body</small>
+            </div>
+          </label>
+        </div>
+        <div class="candidate">
+          <label>
+            <input type="radio" name="secretary" value="James Wilson" />
+            <img src="https://randomuser.me/api/portraits/men/12.jpg" alt="James Wilson" />
+            <div>
+              <strong>James Wilson</strong><br />
+              <small>Focusing on transparency and accurate record-keeping</small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Review Box -->
+      <div class="review-box">
+        <p>Please review your choices carefully before submitting.<br />
+          You cannot change your vote after submission.</p>
+        <div class="button-group">
+          <button type="submit" class="submit-btn">Submit Vote</button>
+          <button type="button" class="save-btn">Save Draft</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <a href="#">FAQ</a> |
+      <a href="#">Contact Support</a> |
+      <a href="#">Voting Guide</a> |
+      <a href="#">Terms of Service</a> |
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Election Rules</a> |
+      <a href="#">Security</a>
+    </div>
+    <p>© 2024 CampusElect. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

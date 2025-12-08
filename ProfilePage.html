@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusElect Dashboard</title>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --primary: #4F7C82;
+      --secondary: #93B1B5;
+      --accent: #B8E3E9;
+      --text-color: #0B2E33;
+      --bg-light: #FFFFFF;
+      --card-bg: #F8FAFC;
+      --muted: #64748B;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: rockwell, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--bg-light);
+      color: var(--text-color);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ---------------------- SIDEBAR ---------------------- */
+    .sidebar {
+      width: 260px;
+      background: var(--primary);
+      color: white;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+    }
+
+    .profile-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .profile-section img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      object-fit: cover;
+    }
+
+    .profile-name {
+      margin-top: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .profile-id {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1rem;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-radius: 6px;
+      text-decoration: none;
+      color: white;
+      transition: background 0.2s ease;
+    }
+
+    .sidebar-menu a:hover, .sidebar-menu a.active {
+      background: var(--secondary);
+    }
+
+    /* ---------------------- MAIN AREA ---------------------- */
+    .main-wrapper {
+      flex: 1;
+      padding: 20px 30px;
+    }
+
+    /* Header */
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .search-bar input {
+      width: 300px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--secondary);
+      outline: none;
+    }
+
+    .header-icons {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-icons i {
+      font-size: 1.2rem;
+      margin-left: 20px;
+      cursor: pointer;
+      color: var(--primary);
+    }
+
+    .header-profile {
+      margin-left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .header-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* ---------------------- GRID CARDS ---------------------- */
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 1px 4px rgba(79, 124, 130, 0.18);
+    }
+
+    .card h3 {
+      margin-bottom: 15px;
+      color: var(--primary);
+    }
+
+    .info-row {
+      margin-bottom: 12px;
+    }
+
+    .info-row span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      display: block;
+    }
+
+    .progress-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 8px solid var(--accent);
+      border-top-color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin: 0 auto;
+    }
+
+    /* Bottom Cards */
+    .bottom-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .tag {
+      background: var(--accent);
+      color: var(--text-color);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-right: 6px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    /* ---------------------- RESPONSIVE ---------------------- */
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        z-index: 1000;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .grid, .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .search-bar input {
+        width: 180px;
+      }
+
+      .menu-toggle {
+        display: block;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--primary);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="profile-section">
+      <img src="Images/Sarah Johnson.jpg" alt="profile">
+      <div class="profile-name">Sarah Johnson</div>
+      <div class="profile-id">Student • NCU</div>
+    </div>
+
+    
+    <div class="sidebar-menu">
+        <a href="HomePage.html"><i class="fa-solid fa-home"></i> Home</a>
+        <a href="UserDashboard.html" class="active"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="VotingPage.html"><i class="fa-solid fa-list"></i> Elections</a>
+        <a href="#"><i class="fa-solid fa-clock-rotate-left"></i> Voting History</a>
+        <a href="#"><i class="fa-solid fa-bell"></i> Notifications</a>
+        <a href="#"><i class="fa-solid fa-user"></i> Profile</a>
+        <a href="SupportPage.html"><i class="fa-solid fa-headset"></i> Support</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-wrapper">
+
+    <!-- Header -->
+    <div class="top-header">
+      <div class="menu-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search…">
+      </div>
+      <div class="header-icons">
+        <i class="fa-solid fa-bell"></i>
+        <i class="fa-solid fa-gear"></i>
+        <div class="header-profile">
+          <img src="Images/Sarah Johnson.jpg" />
+          <span>Sarah</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIRST ROW -->
+    <div class="grid">
+
+      <!-- Student Info -->
+      <div class="card">
+        <h3>Account Information</h3>
+        <div class="info-row"><strong>Student ID:</strong><br><span>2024-0123</span></div>
+        <div class="info-row"><strong>Status:</strong><br><span>Active</span></div>
+        <div class="info-row"><strong>Department:</strong><br><span>Computer Science</span></div>
+        <div class="info-row"><strong>Year:</strong><br><span>3rd Year</span></div>
+        <div class="info-row"><strong>Total Elections Participated:</strong><br><span>12</span></div>
+      </div>
+
+      <!-- Progress -->
+      <div class="card">
+        <h3>Voting Progress</h3>
+        <div class="progress-circle">72%</div>
+        <p style="text-align:center; margin-top:10px; color:var(--muted);">Elections Participated This Year</p>
+      </div>
+    </div>
+
+    <!-- SECOND ROW -->
+    <div class="bottom-grid">
+
+      <!-- Active Elections -->
+      <div class="card">
+        <h3>Active Elections</h3>
+        <p><strong>Student Council President</strong><br><span>Ends in 2 days</span></p>
+        <p><strong>Department Representative</strong><br><span>Ends in 5 days</span></p>
+      </div>
+
+      <!-- Notifications -->
+      <div class="card">
+        <h3>Notifications</h3>
+        <p><i class="fa-solid fa-check-circle" style="color:var(--primary);"></i> Vote submitted for Class Rep<br><span>2 hours ago</span></p>
+        <p><i class="fa-solid fa-bullhorn" style="color:var(--primary);"></i> New election opened<br><span>1 day ago</span></p>
+        <p><i class="fa-regular fa-clock" style="color:var(--primary);"></i> Election closing soon<br><span>2 days ago</span></p>
+      </div>
+
+      <!-- Skills / Tags -->
+      <div class="card">
+        <h3>Skills / Interests</h3>
+        <div class="tag">Cybersecurity</div>
+        <div class="tag">Software Dev</div>
+        <div class="tag">UI/UX</div>
+        <div class="tag">Leadership</div>
+        <div class="tag">Open Source</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.querySelector('.sidebar').classList.toggle('active');
+    }
+
+    // Add active class to clicked sidebar menu
+    const menuLinks = document.querySelectorAll('.sidebar-menu a');
+    menuLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        menuLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

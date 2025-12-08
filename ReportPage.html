@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Audit & Reports - CampusElect</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    :root {
+        --primary: #4F7C82;       /* Teal-like primary */
+        --secondary: #93B1B5;     /* Soft grayish teal */
+        --accent: #B8E3E9;        /* Light aqua accent */
+        --text: #0B2E33;          /* Dark teal text */
+        --bg: #FFFFFF;            /* White background */
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: rockwell;
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    html {
+        font-size: 16px;
+        font-weight: 200;
+    }
+
+    /* Header */
+    header {
+        background: var(--accent);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--text);
+    }
+
+    header .nav {
+        display: flex;
+        gap: 20px;
+    }
+
+    header .nav a {
+        text-decoration: none;
+        color: var(--primary);
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    header .nav a:hover {
+        color: var(--accent);
+    }
+
+    .user-icons i {
+        margin-left: 15px;
+        font-size: 1.2rem;
+        color: var(--primary);
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .user-icons i:hover {
+        color: var(--accent);
+    }
+
+    /* Main Layout */
+    .container {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        background: var(--bg);
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 6px rgba(79, 124, 130, 0.1);
+    }
+
+    .sidebar h3 {
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        color: var(--primary);
+    }
+
+    .sidebar ul {
+        list-style: none;
+    }
+
+    .sidebar li {
+        margin-bottom: 10px;
+        color: var(--text);
+        font-weight: 600;
+    }
+
+    .sidebar li i {
+        color: var(--accent);
+        margin-right: 8px;
+    }
+
+    .sidebar a.download-btn {
+        display: block;
+        background: var(--primary);
+        color: var(--bg);
+        text-align: center;
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
+
+    .sidebar a.download-btn:hover {
+        background: var(--accent);
+    }
+
+    /* Main Content */
+    .main-content h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        color: var(--primary);
+    }
+
+    /* Stats Cards */
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 2px 6px rgba(79, 124, 130, 0.1);
+        color: var(--text);
+    }
+
+    .card i {
+        font-size: 2rem;
+        color: var(--bg);
+        background: var(--primary);
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .card h3 {
+        font-size: 0.95rem;
+        color: var(--secondary);
+    }
+
+    .card .value {
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: var(--text);
+    }
+
+    /* Chart Section */
+    .chart-box {
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(79, 124, 130, 0.1);
+        margin-bottom: 20px;
+        color: var(--text);
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 280px !important;
+    }
+
+    /* Audit Logs */
+    .audit-logs {
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(79, 124, 130, 0.1);
+        margin-bottom: 20px;
+        color: var(--text);
+    }
+
+    .audit-logs table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .audit-logs th,
+    .audit-logs td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--secondary);
+    }
+
+    .audit-logs th {
+        background: var(--accent);
+        color: var(--text);
+        font-weight: 700;
+    }
+
+    .status-success {
+        color: var(--accent);
+        font-weight: bold;
+    }
+
+    .status-warning {
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    /* Anomaly Section */
+    .anomaly-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .anomaly-box {
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(79, 124, 130, 0.1);
+        color: var(--text);
+    }
+
+    .anomaly-details ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .anomaly-details li {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+    }
+
+    .anomaly-details li span:first-child i {
+        margin-right: 8px;
+        color: var(--primary);
+    }
+
+    /* Transparency Notes */
+    .notes {
+        background: var(--bg);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(79, 124, 130, 0.1);
+        color: var(--text);
+    }
+
+    .notes h4 {
+        margin-bottom: 10px;
+        font-size: 1rem;
+        color: var(--primary);
+    }
+
+    .notes p {
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        color: var(--text);
+    }
+
+    /* Footer */
+    footer {
+        text-align: center;
+        padding: 15px;
+        background: var(--accent);
+        color: var(--text);
+        margin-top: 20px;
+        font-size: 0.9rem;
+    }
+
+    footer a {
+        margin: 0 10px;
+        text-decoration: none;
+        color: var(--primary);
+        transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+        color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .container {
+            grid-template-columns: 1fr;
+        }
+
+        .anomaly-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo"><strong>CampusElect</strong></div>
+    <nav class="nav">
+        <a href="HomePage.html">Home</a>
+        <a href="UserDashboard.html">Dashboard</a>
+        <a href="VotingPage.html">Elections</a>
+        <a href="ReportPage.html">Audit & Reports</a>
+        <a href="#">Settings</a>
+    </nav>
+    <div class="user-icons">
+        <i class="fa fa-bell"></i>
+        <i class="fa fa-user-circle"></i>
+    </div>
+</header>
+
+<div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h3>Quick Filters</h3>
+        <ul>
+            <li><i class="fa fa-calendar"></i> Date Range</li>
+            <li><i class="fa fa-filter"></i> Election Type</li>
+            <li><i class="fa fa-search"></i> Search Events</li>
+        </ul>
+        <a href="#" class="download-btn"><i class="fa fa-download"></i> Download Report</a>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Audit & Reports</h1>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="card">
+                <i class="fa fa-vote-yea"></i>
+                <div>
+                    <h3>Total Votes Cast</h3>
+                    <div class="value">2,547</div>
+                </div>
+            </div>
+            <div class="card">
+                <i class="fa fa-chart-line"></i>
+                <div>
+                    <h3>Participation Rate</h3>
+                    <div class="value">78.3%</div>
+                </div>
+            </div>
+            <div class="card">
+                <i class="fa fa-exclamation-triangle"></i>
+                <div>
+                    <h3>Detected Anomalies</h3>
+                    <div class="value">12</div>
+                </div>
+            </div>
+            <div class="card">
+                <i class="fa fa-file-alt"></i>
+                <div>
+                    <h3>Generated Reports</h3>
+                    <div class="value">45</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voting Timeline Chart -->
+        <div class="chart-box">
+            <h3>Voting Timeline</h3>
+            <canvas id="timelineChart"></canvas>
+        </div>
+
+        <!-- Audit Logs -->
+        <div class="audit-logs">
+            <h3>Audit Logs</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Event</th>
+                        <th>Description</th>
+                        <th>User</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2024-02-20 15:30:45</td>
+                        <td>Vote Cast</td>
+                        <td>Student Council Election - Valid Vote Recorded</td>
+                        <td>Student ID: 2024789</td>
+                        <td class="status-success">Success</td>
+                    </tr>
+                    <tr>
+                        <td>2024-02-20 15:29:30</td>
+                        <td>Authentication</td>
+                        <td>Two-Factor Authentication Completed</td>
+                        <td>Student ID: 2024791</td>
+                        <td class="status-success">Success</td>
+                    </tr>
+                    <tr>
+                        <td>2024-02-20 15:28:15</td>
+                        <td>System Check</td>
+                        <td>Automated Integrity Verification</td>
+                        <td>System</td>
+                        <td class="status-success">Completed</td>
+                    </tr>
+                    <tr>
+                        <td>2024-02-20 15:27:00</td>
+                        <td>Anomaly Detection</td>
+                        <td>Duplicate Vote Attempt Blocked</td>
+                        <td>Student ID: 2024445</td>
+                        <td class="status-warning">Warning</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Anomaly Section -->
+        <div class="anomaly-container">
+            <div class="anomaly-box">
+                <h3>Anomaly Distribution</h3>
+                <canvas id="anomalyChart"></canvas>
+            </div>
+            <div class="anomaly-box anomaly-details">
+                <h3>Anomaly Details</h3>
+                <ul>
+                    <li><span><i class="fa fa-exclamation-triangle"></i> Duplicate Votes</span><span>5</span></li>
+                    <li><span><i class="fa fa-clock"></i> Timing Issues</span><span>3</span></li>
+                    <li><span><i class="fa fa-lock"></i> Authentication Fails</span><span>2</span></li>
+                    <li><span><i class="fa fa-cogs"></i> System Errors</span><span>2</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Transparency Notes -->
+        <div class="notes">
+            <h4>Transparency Notes</h4>
+            <p><strong>Methodology:</strong> Our voting system employs end-to-end verification and blockchain technology to ensure vote integrity and transparency.</p>
+            <p><strong>Data Collection:</strong> All voting data is encrypted and stored securely. Personal information is handled in compliance with privacy regulations.</p>
+            <p><strong>Verification Process:</strong> Multiple verification steps are implemented to prevent duplicate voting and ensure voter eligibility.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2024 CampusElect. All rights reserved. |
+    <a href="#">Privacy Policy</a> |
+    <a href="#">Terms of Service</a> |
+    <a href="#">Contact Support</a>
+</footer>
+
+<!-- Chart.js Scripts -->
+<script>
+    // Voting Timeline Chart
+    const ctxTimeline = document.getElementById('timelineChart').getContext('2d');
+    new Chart(ctxTimeline, {
+        type: 'line',
+        data: {
+            labels: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'],
+            datasets: [{
+                label: 'Votes',
+                data: [150, 250, 400, 480, 560, 650, 760],
+                borderColor: 'var(--primary)',
+                backgroundColor: 'var(--accent)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // Anomaly Distribution Doughnut Chart
+    const ctxAnomaly = document.getElementById('anomalyChart').getContext('2d');
+    new Chart(ctxAnomaly, {
+        type: 'doughnut',
+        data: {
+            labels: ['Duplicate Votes', 'Timing Issues', 'Auth Fails', 'System Errors'],
+            datasets: [{
+                data: [5, 3, 2, 2],
+                backgroundColor: ['var(--primary)', 'var(--accent)', 'var(--secondary)', '#9CA3AF'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+</script>
+
+</body>
+</html>

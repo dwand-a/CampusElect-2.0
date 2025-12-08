@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusElect</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    :root {
+      --primary: #4F7C82;
+      --secondary: #93B1B5;
+      --accent: #B8E3E9;
+      --text: #0B2E33;
+      --bg: #FFFFFF;
+    }
+
+    body {
+      margin: 0;
+      font-family: rockwell;
+      font-size: 16px;
+      font-weight: 200;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background-color: var(--primary);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: white;
+    }
+
+    nav a {
+      margin: 0 0.75rem;
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background-color: var(--secondary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 3rem 2rem;
+    }
+
+    .hero-text {
+      flex: 1;
+    }
+
+    .hero-text h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-text p {
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-image {
+      flex: 1;
+      text-align: center;
+    }
+
+    .hero-image img {
+      max-width: 80%;
+      width: 300px;
+      border-radius: 10px;
+    }
+
+    .features {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .features h3 {
+      margin-bottom: 2rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature {
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 1rem;
+      background: white;
+    }
+
+    .feature i {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .vision {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 3rem 2rem;
+      align-items: center;
+    }
+
+    .vision img {
+      flex: 1;
+      max-width: 80%;
+      width: 300px;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .vision-text {
+      flex: 1;
+      padding-left: 2rem;
+    }
+
+    .vision-text h3 {
+      margin-bottom: 1rem;
+    }
+
+    .vision-text ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .vision-text ul li::before {
+      content: "\f00c";
+      font-family: FontAwesome;
+      margin-right: 0.5rem;
+      color: var(--secondary);
+    }
+
+    .team, .resources {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .team-members, .resource-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .card {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 0.5rem;
+    }
+
+    footer {
+      background-color: var(--text);
+      color: white;
+      padding: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .footer-section {
+      flex: 1 1 200px;
+      margin-bottom: 1rem;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-section input[type="email"] {
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: none;
+      margin-right: 0.5rem;
+    }
+
+    .footer-section button {
+      background-color: var(--accent);
+      color: var(--text);
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .social-icons a {
+      margin-right: 0.5rem;
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .hero,
+      .vision {
+        flex-direction: column;
+      }
+
+      .vision-text {
+        padding-left: 0;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CampusElect</h1>
+    <nav>
+      <a href="HomePage.html">Home</a>
+      <a href="ContactPage.html">Contact</a>
+      <a href="AboutUsPage.html">About</a>
+      <a href="#">Resources</a>
+      <button class="btn-primary">Get Started</button>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h2>Modernizing Campus Elections</h2>
+      <p>A comprehensive electronic voting platform designed to transform electoral processes across educational institutions. Secure, transparent, and accessible.</p>
+      <button class="btn-primary">Learn More</button>
+    </div>
+    <div class="hero-image">
+      <img src="Images/Voteimages.jpeg" alt="Voting System Image" />
+    </div>
+  </section>
+
+  <section class="features">
+    <h3>Transforming Educational Democracy</h3>
+    <div class="features-grid">
+      <div class="feature">
+        <i class="fas fa-shield-alt"></i>
+        <h4>Secure Voting</h4>
+        <p>End-to-end encryption and robust authentication ensure the integrity of every vote.</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-chart-bar"></i>
+        <h4>Real-time Results</h4>
+        <p>Instant vote counting and result visualization with complete transparency.</p>
+      </div>
+      <div class="feature">
+        <i class="fas fa-plug"></i>
+        <h4>Easy Integration</h4>
+        <p>Seamlessly integrates with existing school management systems.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="vision">
+    <img src="Images/Team.jpg" alt="Team Collaboration Image" />
+    <div class="vision-text">
+      <h3>Our Vision & Goals</h3>
+      <p>CampusElect envisions a future where every educational institution can conduct fair, secure, and efficient elections. We’re committed to democratizing the voting process and ensuring every student’s voice is heard.</p>
+      <ul>
+        <li>Enhance electoral accessibility and participation</li>
+        <li>Ensure complete transparency and security</li>
+        <li>Streamline administrative processes</li>
+        <li>Promote democratic engagement in education</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="team">
+    <h3>Meet Our Team</h3>
+    <div class="team-members">
+      <div class="card">
+        <img src="Images/Sarah Johnson.jpg" alt="Sarah Johnson">
+        <h4>Sarah Johnson</h4>
+        <p>Project Lead<br/>10+ years in EdTech</p>
+      </div>
+      <div class="card">
+        <img src="Images/DavidChen.jpg" alt="David Chen">
+        <h4>David Chen</h4>
+        <p>Security Expert<br/>Cryptography & Secure Systems</p>
+      </div>
+      <div class="card">
+        <img src="Images/Zen.jpg" alt="Dwanda Pennants">
+        <h4>Dwanda Pennants</h4>
+        <p>CEO<br/>10+ years</p>
+      </div>
+      <div class="card">
+        <img src="Images/Zach.jpg" alt="Zachery Daley">
+        <h4>Zachery Daley</h4>
+        <p>Data Analyst<br/></p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

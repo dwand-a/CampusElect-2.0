@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account | CampusElect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --primary: #4F7C82;
+      --secondary: #93B1B5;
+      --accent: #B8E3E9;
+      --text: #0B2E33;
+      --bg: #FFFFFF;
+      --error: #E74C3C;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: rockwell;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    html { font-size: 16px; font-weight: 200; }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 10%;
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .nav-logo { display: flex; align-items: center; font-size: 1.5rem; font-weight: bold; }
+
+    .nav-links a {
+      font-weight: 540;
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      opacity: 0.6;
+      /* make these clickable in case you want them to work */
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .nav-links a i { margin-right: 6px; color: white; }
+
+    .container { display: flex; flex-wrap: wrap; min-height: 100vh; }
+
+    .left-panel {
+      flex: 1 1 40%;
+      background-color: var(--accent);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+    .left-panel img { width: 100%; max-width: 350px; border-radius: 10px; object-fit: cover; }
+    .left-panel h2 { margin-top: 20px; font-size: 1.5rem; text-align: center; color: var(--primary); }
+    .left-panel p { margin-top: 10px; font-size: 0.95rem; text-align: center; }
+    .left-panel p i { color: var(--accent); margin: 0 4px; }
+
+    .right-panel {
+      flex: 1 1 60%;
+      padding: 60px 10%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .right-panel h2 { font-size: 1.8rem; margin-bottom: 10px; color: var(--primary); }
+    .right-panel p { color: var(--secondary); margin-bottom: 30px; }
+
+    form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    form input, form select {
+      padding: 12px 14px;
+      border: 1px solid var(--secondary);
+      border-radius: 6px;
+      width: 100%;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    form input::placeholder { color: var(--secondary); }
+    form .full-width { grid-column: span 2; }
+
+    .input-icon { position: relative; }
+    .input-icon i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--primary); }
+    .input-icon input, .input-icon select { padding-left: 34px; }
+
+    .error-msg { color: var(--error); font-size: 0.95rem; grid-column: span 2; min-height: 1.2em; display:block; }
+
+    .captcha {
+      display: flex; align-items: center; gap: 10px;
+      margin: 10px 0; grid-column: span 2;
+      color: var(--primary); font-weight: 500;
+    }
+    .captcha label i { color: var(--accent); }
+
+    .create-button {
+      grid-column: span 2;
+      background-color: var(--primary);
+      color: white;
+      padding: 12px;
+      border: none; border-radius: 6px;
+      font-size: 1rem; cursor: pointer;
+      transition: background-color 0.3s ease, opacity 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .create-button.loading { opacity: 0.9; filter: brightness(0.95); }
+    .create-button:hover:not([disabled]) { background-color: var(--secondary); }
+    .create-button[disabled] { opacity: 0.6; cursor: not-allowed; filter: grayscale(0.4); }
+
+    .login-link { text-align: center; margin-top: 20px; font-size: 0.95rem; }
+    .login-link a { color: var(--accent); text-decoration: none; }
+    .login-link a:hover { text-decoration: underline; }
+
+    footer {
+      display: flex; justify-content: space-between; flex-wrap: wrap;
+      padding: 20px 10%; font-size: 0.9rem;
+      background-color: var(--accent); color: var(--text);
+    }
+    footer a { margin: 0 10px; color: var(--primary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .left-panel, .right-panel { flex: 1 1 100%; padding: 40px 5%; }
+      form { grid-template-columns: 1fr; }
+      form .full-width, .create-button { grid-column: span 1; }
+      .error-msg { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">CampusElect</div>
+    <div class="nav-links">
+      <a href="#"><i class="fas fa-home"></i> Home</a>
+      <a href="#"><i class="fas fa-info-circle"></i> About</a>
+      <a href="#"><i class="fas fa-cogs"></i> Features</a>
+      <a href="#"><i class="fas fa-envelope"></i> Contact</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="left-panel">
+      <!-- image path - replace as needed -->
+      <img src="Images/exigences-CNIL-systemes-de-vote-lectronique.webp" alt="Voting Tablet Illustration" />
+      <h2>Modernizing Campus Democracy</h2>
+      <p><i class="fas fa-shield-alt"></i> Secure • <i class="fas fa-eye"></i> Transparent • <i class="fas fa-universal-access"></i> Accessible</p>
+    </div>
+
+    <div class="right-panel">
+      <h2><i class="fas fa-user-plus"></i> Create Your Account</h2>
+      <p>Join CampusElect to participate in your institution’s electoral process</p>
+
+      <form id="registerForm" novalidate>
+
+        <div class="input-icon full-width">
+          <i class="fas fa-user" aria-hidden="true"></i>
+          <input type="text" id="fullName" placeholder="Full Name" required />
+        </div>
+
+        <div class="input-icon full-width">
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+          <input type="email" id="email" placeholder="Institutional Email (e.g., @stu.edu.jm)" required />
+        </div>
+
+        <div class="input-icon">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+          <input type="password" id="password" placeholder="Password (8+ chars)" required />
+        </div>
+
+        <div class="input-icon">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+          <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+        </div>
+
+        <div class="input-icon full-width">
+          <i class="fas fa-id-badge" aria-hidden="true"></i>
+          <input type="text" id="studentID" placeholder="Student/Faculty ID (6+ digits)" required />
+        </div>
+
+        <!-- ROLE FIELD -->
+        <div class="input-icon full-width">
+          <i class="fas fa-user-tag" aria-hidden="true"></i>
+          <select id="role" required>
+            <option value="" disabled selected>Select Role</option>
+            <option value="student">Student</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+
+        <!-- Institution Type -->
+        <div class="input-icon full-width">
+          <i class="fas fa-building" aria-hidden="true"></i>
+          <select id="institutionType" required>
+            <option value="" disabled selected>Select Institution Type</option>
+            <option value="primary">Primary</option>
+            <option value="secondary">Secondary</option>
+            <option value="tertiary">Tertiary</option>
+          </select>
+        </div>
+
+        <!-- School -->
+        <div class="input-icon full-width">
+          <i class="fas fa-school" aria-hidden="true"></i>
+          <select id="school" required>
+            <option value="" disabled selected>Select Your School</option>
+          </select>
+        </div>
+
+        <div class="captcha full-width">
+          <input type="checkbox" id="acceptTerms" />
+          <label for="acceptTerms"><i class="fas fa-check-circle" aria-hidden="true"></i> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+        </div>
+
+        <div class="error-msg" id="formError" role="alert" aria-live="polite"></div>
+
+        <button type="submit" class="create-button" id="registerBtn"><i class="fas fa-user-plus"></i><span id="btnText">Create Account</span></button>
+      </form>
+
+      <div class="login-link">
+        Already have an account? <a href="LoginPage.html">Sign in here</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2024 CampusElect. All rights reserved.</div>
+    <div>
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms of Service</a> |
+      <a href="#">Help Center</a>
+    </div>
+  </footer>
+
+  <!-- FIREBASE SCRIPT -->
+  <script type="module">
+    // Firebase imports (v11 modular)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+    // --- CONFIG: replace with your real values if changed ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyBectebyd-Fs1lfTLKf_xaZsr9jE3koQXE",
+      authDomain: "campuselect-9711e.firebaseapp.com",
+      projectId: "campuselect-9711e",
+      storageBucket: "campuselect-9711e.appspot.com",
+      messagingSenderId: "137437020167",
+      appId: "1:137437020167:web:4f3b002824c0f45b0f6aa2",
+      measurementId: "G-6HQSW3NC9E"
+    };
+
+    // initialize firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // DOM refs
+    const registerForm = document.getElementById("registerForm");
+    const registerBtn = document.getElementById("registerBtn");
+    const btnText = document.getElementById("btnText");
+    const formError = document.getElementById("formError");
+
+    // School lists
+    const schoolsByType = {
+      primary: [
+        "Allman Town Primary",
+        "St. Andrew Primary",
+        "Half-Way-Tree Primary",
+        "New Providence Primary",
+        "Mandeville Primary & Junior High",
+        "Denham Town Primary",
+        "Naggo Head Primary"
+      ],
+      secondary: [
+        "Ardenne High",
+        "Immaculate Conception High",
+        "Jamaica College",
+        "Kingston College",
+        "Campion College",
+        "Munro College",
+        "Manchester High",
+        "Westwood High",
+        "Excelsior High"
+      ],
+      tertiary: [
+        "Northern Caribbean University",
+        "University of the West Indies, Mona",
+        "University of Technology, Jamaica",
+        "Caribbean Maritime University",
+        "Mico University College",
+        "University College of the Caribbean",
+        "Edna Manley College of the Visual and Performing Arts"
+      ]
+    };
+
+    const institutionTypeSelect = document.getElementById("institutionType");
+    const schoolSelect = document.getElementById("school");
+
+    // populate schools when institution type changes
+    institutionTypeSelect.addEventListener("change", () => {
+      const type = institutionTypeSelect.value;
+      schoolSelect.innerHTML = '<option value="" disabled selected>Select Your School</option>';
+      // map the 'Tertiary' visible option to 'tertiary' key (lowercase)
+      const key = type ? type.toLowerCase() : "";
+      if (schoolsByType[key]) {
+        schoolsByType[key].forEach(school => {
+          const opt = document.createElement("option");
+          opt.value = school;
+          opt.textContent = school;
+          schoolSelect.appendChild(opt);
+        });
+      }
+    });
+
+    // helper to show errors
+    function showError(message) {
+      formError.textContent = message;
+    }
+
+    // helper to set loading state
+    function setLoading(isLoading) {
+      if (isLoading) {
+        registerBtn.disabled = true;
+        registerBtn.classList.add("loading");
+        btnText.textContent = "Creating...";
+      } else {
+        registerBtn.disabled = false;
+        registerBtn.classList.remove("loading");
+        btnText.textContent = "Create Account";
+      }
+    }
+
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      formError.textContent = "";
+      console.log("Submit pressed");
+
+      // collect fields
+      const fullName = document.getElementById("fullName").value.trim();
+      const emailRaw = document.getElementById("email").value.trim();
+      const email = emailRaw.toLowerCase(); // normalize
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const studentID = document.getElementById("studentID").value.trim();
+      const role = document.getElementById("role").value;
+      const institutionType = institutionTypeSelect.value;
+      const school = schoolSelect.value;
+      const acceptTerms = document.getElementById("acceptTerms").checked;
+
+      // Basic validation
+      if (!fullName || !email || !password || !confirmPassword || !studentID || !role || !institutionType || !school) {
+        showError("Please fill in all fields.");
+        return;
+      }
+
+      // Accept only institutional domains; normalized to lowercase
+      if (!email.endsWith("@stu.edu.jm") && !email.endsWith("@admin.edu.jm")) {
+        showError("Email must end with @stu.edu.jm (students) or @admin.edu.jm (admins).");
+        return;
+      }
+
+      // Role and email domain must match
+      if (role === "student" && !email.endsWith("@stu.edu.jm")) {
+        showError("Student role requires an @stu.edu.jm email.");
+        return;
+      }
+      if (role === "admin" && !email.endsWith("@admin.edu.jm")) {
+        showError("Administrator role requires an @admin.edu.jm email.");
+        return;
+      }
+
+      if (password.length < 8) {
+        showError("Password must be at least 8 characters.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showError("Passwords do not match.");
+        return;
+      }
+      if (!/^\d{6,}$/.test(studentID)) {
+        showError("Student/Faculty ID must be at least 6 digits.");
+        return;
+      }
+      if (!acceptTerms) {
+        showError("You must accept the Terms and Privacy Policy.");
+        return;
+      }
+
+      setLoading(true);
+      try {
+        console.log("Calling Firebase createUserWithEmailAndPassword for:", email);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        console.log("Firebase user created:", user.uid);
+
+        // store user record in firestore
+        await setDoc(doc(db, "users", user.uid), {
+          fullName,
+          email,
+          studentID,
+          institutionType,
+          school,
+          role,
+          createdAt: new Date().toISOString()
+        });
+
+        // redirect based on role
+        if (role === "student") {
+          // use replace so user cannot go back to registration page with back button
+          location.replace("LoginPage.html");
+        } else if (role === "admin") {
+          location.replace("AdminLoginPage.html");
+        } else {
+          // fallback
+          location.replace("LoginPage.html");
+        }
+
+      } catch (error) {
+        console.error("Registration error:", error);
+        // friendly messaging
+        let message = "Registration failed. Please try again.";
+        // common firebase messages mapping (safe to show)
+        if (error && error.code) {
+          switch (error.code) {
+            case "auth/email-already-in-use":
+              message = "This email is already in use. Try signing in or use a different email.";
+              break;
+            case "auth/invalid-email":
+              message = "Invalid email address.";
+              break;
+            case "auth/weak-password":
+              message = "Weak password. Please choose a stronger password.";
+              break;
+            default:
+              // if there is an error.message, show a short version
+              if (error.message) {
+                message = error.message;
+              }
+          }
+        } else if (error && error.message) {
+          message = error.message;
+        }
+        showError(message);
+      } finally {
+        // If we redirected, the page would unload and this won't run;
+        // otherwise re-enable the form so the user can try again.
+        setLoading(false);
+      }
+    });
+
+    // small accessibility: focus first input on load
+    document.getElementById("fullName").focus();
+
+  </script>
+
+</body>
+</html>
