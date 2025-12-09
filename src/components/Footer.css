@@ -1,0 +1,62 @@
+:root {
+  --primary: #4f7c82;
+  --secondary: #93b1b5;
+  --accent: #b8e3e9;
+}
+
+footer {
+  background-color: var(--primary);
+  color: white;
+  padding: 20px 10%;
+}
+
+footer .footer-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+footer h4 {
+  margin-bottom: 12px;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: white;
+}
+
+footer p {
+  font-size: 0.95em;
+  line-height: 1.5;
+}
+
+footer a {
+  display: block;
+  margin: 4px 0;
+  color: #f0f0f0;
+  font-size: 0.95em;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+footer .social-icons a {
+  display: inline-block;
+  margin-right: 10px;
+  color: var(--accent);
+  font-size: 1.2em;
+  transition: color 0.3s ease;
+}
+
+footer .social-icons a:hover {
+  color: var(--secondary);
+}
+
+footer .copyright {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.85em;
+  color: #e8e8e8;
+}
+
