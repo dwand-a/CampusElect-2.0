@@ -1,28 +1,30 @@
+import { useEffect, useState } from 'react'
+import { fetchElections, fetchCandidates } from '../services/firestore'
 import './HomePage.css'
 
-const fallbackElections = [
-  {
-    title: 'United Student Movement Elections',
-    category: 'University',
-    start: '2025-12-15 09:00',
-    end: '2025-12-15 17:00',
-  },
-  {
-    title: 'Department Representatives',
-    category: 'University',
-    start: '2025-12-18 10:00',
-    end: '2025-12-18 16:00',
-  },
-  {
-    title: 'Sports Committee Selection',
-    category: 'University',
-    start: '2025-12-20 08:00',
-    end: '2025-12-20 18:00',
-  },
-]
-
 export default function HomePage() {
-  const elections = JSON.parse(localStorage.getItem('elections')) || fallbackElections
+  const [elections, setElections] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const load = async () => {
+      const data = await fetchElections()
+      if (!data.length) {
+        setElections([])
+        setLoading(false)
+        return
+      }
+      const enriched = await Promise.all(
+        data.map(async (election) => {
+          const candidates = await fetchCandidates(election.candidateIds || [])
+          return { ...election, candidates }
+        }),
+      )
+      setElections(enriched)
+      setLoading(false)
+    }
+    load()
+  }, [])
 
   return (
     <>
@@ -30,7 +32,7 @@ export default function HomePage() {
         <div className="hero-text">
           <h1>Modernize Your Campus Elections</h1>
           <p>Secure, Transparent, and Easy-to-use Voting Platform for Educational Institutions</p>
-          <button type="button">
+          <button type="button" onClick={() => (window.location.href = '/vote')}>
             <i className="fas fa-check-circle" /> Start Voting
           </button>
         </div>
@@ -43,17 +45,21 @@ export default function HomePage() {
         <h2>
           <i className="fas fa-bullhorn" /> Active Elections
         </h2>
+        {loading && <p>Loading elections...</p>}
+        {!loading && !elections.length && <p>No active elections yet.</p>}
         <div className="cards">
           {elections.map((election) => (
-            <div className="card" key={election.title}>
+            <div className="card" key={election.id}>
               <h4>
-                <i className="fas fa-users" /> {election.title}
+                <i className="fas fa-users" /> {election.name}
               </h4>
-              <small>
-                {election.category}
-                <br />
-                {election.start} - {election.end}
-              </small>
+              <small>{election.date}</small>
+              <p className="candidates-label">Candidates:</p>
+              <ul className="candidate-list">
+                {(election.candidates || []).map((c) => (
+                  <li key={c.id}>{c.name}</li>
+                ))}
+              </ul>
               <a href="/vote">Vote Now →</a>
             </div>
           ))}

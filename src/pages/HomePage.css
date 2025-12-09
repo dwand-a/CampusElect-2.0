@@ -108,6 +108,16 @@ body {
 .card a:hover {
   color: var(--primary);
 }
+.candidate-list {
+  padding-left: 16px;
+  margin: 8px 0;
+}
+
+.candidates-label {
+  margin: 8px 0 4px;
+  font-weight: 600;
+  color: var(--text);
+}
 
 .features {
   display: flex;

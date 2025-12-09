@@ -1,9 +1,26 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './PageLayout.css'
 
 export default function LoginPage() {
-  const handleSubmit = (event) => {
+  const { login } = useAuth()
+  const navigate = useNavigate()
+  const [status, setStatus] = useState('')
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    alert('Login submitted')
+    const form = new FormData(event.target)
+    const email = form.get('email')
+    const password = form.get('password')
+    setStatus('Signing in...')
+    try {
+      await login(email, password)
+      setStatus('Signed in!')
+      navigate('/dashboard')
+    } catch (err) {
+      setStatus(err.message)
+    }
   }
 
   return (
@@ -17,6 +34,7 @@ export default function LoginPage() {
           <label htmlFor="password">Password</label>
           <input id="password" type="password" name="password" placeholder="Password" required />
           <button type="submit">Login</button>
+          {status && <p>{status}</p>}
         </form>
       </div>
     </div>

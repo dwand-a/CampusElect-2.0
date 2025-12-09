@@ -1,9 +1,33 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './PageLayout.css'
 
 export default function AdminLoginPage() {
-  const handleSubmit = (event) => {
+  const { login, userRole, loading } = useAuth()
+  const navigate = useNavigate()
+  const [status, setStatus] = useState('')
+
+  // Redirect if already logged in as admin
+  useEffect(() => {
+    if (!loading && userRole === 'admin') {
+      navigate('/admin/home', { replace: true })
+    }
+  }, [userRole, loading, navigate])
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    alert('Admin login submitted')
+    const form = new FormData(event.target)
+    const email = form.get('email')
+    const password = form.get('password')
+    setStatus('Logging in...')
+    try {
+      await login(email, password)
+      // Check role after login (will be checked by ProtectedRoute)
+      navigate('/admin/home')
+    } catch (err) {
+      setStatus(err.message || 'Login failed')
+    }
   }
 
   return (
@@ -17,6 +41,7 @@ export default function AdminLoginPage() {
           <label htmlFor="admin-password">Password</label>
           <input id="admin-password" type="password" name="password" placeholder="Password" required />
           <button type="submit">Login</button>
+          {status && <p style={{ color: status.includes('failed') || status.includes('error') ? '#E74C3C' : '#4F7C82' }}>{status}</p>}
         </form>
       </div>
     </div>

@@ -1,9 +1,42 @@
+import { useEffect, useState } from 'react'
+import { createElection, ensureSeedInstitutions, fetchInstitutions } from '../services/firestore'
 import './PageLayout.css'
 
 export default function ElectionCreationPage() {
-  const handleSubmit = (event) => {
+  const [institutions, setInstitutions] = useState([])
+  const [status, setStatus] = useState('')
+
+  useEffect(() => {
+    const load = async () => {
+      await ensureSeedInstitutions()
+      const list = await fetchInstitutions()
+      setInstitutions(list)
+    }
+    load()
+  }, [])
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    alert('Election created (placeholder)')
+    const form = new FormData(event.target)
+    const title = form.get('title')
+    const date = form.get('date')
+    const institutionId = form.get('institution')
+    const candidatesText = form.get('candidates') || ''
+    const candidates = candidatesText
+      .split('\n')
+      .map((c) => c.trim())
+      .filter(Boolean)
+    if (!candidates.length) {
+      setStatus('Add at least one candidate.')
+      return
+    }
+    try {
+      await createElection({ name: title, date, institutionId, candidates })
+      setStatus('Election created!')
+      event.target.reset()
+    } catch (err) {
+      setStatus(err.message)
+    }
   }
 
   return (
@@ -14,13 +47,21 @@ export default function ElectionCreationPage() {
         <form onSubmit={handleSubmit}>
           <label htmlFor="title">Title</label>
           <input id="title" name="title" placeholder="Election title" required />
-          <label htmlFor="category">Category</label>
-          <input id="category" name="category" placeholder="e.g., University" />
-          <label htmlFor="start">Start</label>
-          <input id="start" type="datetime-local" name="start" required />
-          <label htmlFor="end">End</label>
-          <input id="end" type="datetime-local" name="end" required />
+          <label htmlFor="date">Date</label>
+          <input id="date" type="date" name="date" required />
+          <label htmlFor="institution">Institution</label>
+          <select id="institution" name="institution" required>
+            <option value="">Select institution</option>
+            {institutions.map((inst) => (
+              <option key={inst.id} value={inst.id}>
+                {inst.name}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="candidates">Candidates (one per line)</label>
+          <textarea id="candidates" name="candidates" rows="5" placeholder="Jane Doe&#10;John Smith" />
           <button type="submit">Create</button>
+          {status && <p>{status}</p>}
         </form>
       </div>
     </div>
