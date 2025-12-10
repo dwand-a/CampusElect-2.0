@@ -3,7 +3,7 @@ import './AboutPage.css'
 export default function AboutPage() {
   return (
     <div className="about-page">
-      <header className="about-header">
+      {/* <header className="about-header">
         <h1>CampusElect</h1>
         <nav>
           <a href="/">Home</a>
@@ -14,7 +14,7 @@ export default function AboutPage() {
             Get Started
           </button>
         </nav>
-      </header>
+      </header> */}
 
       <section className="hero">
         <div className="hero-text">

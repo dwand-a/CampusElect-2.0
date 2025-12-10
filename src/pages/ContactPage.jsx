@@ -10,7 +10,7 @@ export default function ContactPage() {
 
   return (
     <div className="contact-page">
-      <header className="contact-header">
+      {/* <header className="contact-header">
         <h1>CampusElect</h1>
         <nav>
           <a href="/">Home</a>
@@ -19,7 +19,7 @@ export default function ContactPage() {
           <a href="/about">About</a>
           <a href="/contact">Contact</a>
         </nav>
-      </header>
+      </header> */}
 
       <div className="container">
         <div className="page-header">
