@@ -64,26 +64,33 @@ export default function HomePage() {
             </div>
           ))}
         </div>
-      </section>
+      </section>  
 
       <section className="features">
-        <div className="feature-item">
-          <i className="fas fa-shield-alt" />
-          <h4>Secure Authentication</h4>
-          <p>Multi-factor authentication and encrypted voting process ensures complete security</p>
-        </div>
-        <div className="feature-item">
-          <i className="fas fa-chart-line" />
-          <h4>Real-time Results</h4>
-          <p>Watch live vote counting with our transparent result visualization system</p>
-        </div>
-        <div className="feature-item">
-          <i className="fas fa-file-alt" />
-          <h4>Audit Trail</h4>
-          <p>Comprehensive logging and verification system for complete transparency</p>
-        </div>
-      </section>
+  <h3>Platform Features</h3>
 
+  <div className="features-grid">
+    <div className="feature">
+      <i className="fas fa-shield-alt" />
+      <h4>Secure Voting</h4>
+      <p>End-to-end encryption and robust authentication ensure the integrity of every vote.</p>
+    </div>
+
+    <div className="feature">
+      <i className="fas fa-chart-bar" />
+      <h4>Real-time Results</h4>
+      <p>Instant vote counting and result visualization with complete transparency.</p>
+    </div>
+
+    <div className="feature">
+      <i className="fas fa-plug" />
+      <h4>Easy Integration</h4>
+      <p>Seamlessly integrates with existing school management systems.</p>
+    </div>
+  </div>
+</section>
+
+   
       <section className="stats">
         <div className="stat">
           <h3>100+</h3>

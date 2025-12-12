@@ -32,27 +32,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="features">
-        <h3>Transforming Educational Democracy</h3>
-        <div className="features-grid">
-          <div className="feature">
-            <i className="fas fa-shield-alt" />
-            <h4>Secure Voting</h4>
-            <p>End-to-end encryption and robust authentication ensure the integrity of every vote.</p>
-          </div>
-          <div className="feature">
-            <i className="fas fa-chart-bar" />
-            <h4>Real-time Results</h4>
-            <p>Instant vote counting and result visualization with complete transparency.</p>
-          </div>
-          <div className="feature">
-            <i className="fas fa-plug" />
-            <h4>Easy Integration</h4>
-            <p>Seamlessly integrates with existing school management systems.</p>
-          </div>
-        </div>
-      </section>
-
+      
       <section className="vision">
         <img src="/images/Team.jpg" alt="Team Collaboration" />
         <div className="vision-text">

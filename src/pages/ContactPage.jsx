@@ -86,31 +86,6 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-
-      <footer className="contact-footer">
-        <div className="footer-column">
-          <h4>Company Info</h4>
-          <a href="#">About CampusElect</a>
-          <a href="#">Our Mission</a>
-          <a href="#">Career Opportunities</a>
-        </div>
-
-        <div className="footer-column">
-          <h4>Resources</h4>
-          <a href="#">Documentation</a>
-          <a href="#">API Access</a>
-          <a href="#">Support Center</a>
-        </div>
-
-        <div className="footer-column">
-          <h4>Legal</h4>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Security Information</a>
-        </div>
-
-        <div className="footer-bottom">© 2024 CampusElect. All rights reserved.</div>
-      </footer>
     </div>
   )
 }
