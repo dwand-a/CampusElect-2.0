@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { ensureSeedInstitutions, fetchInstitutions } from '../services/firestore'
 import voteImg from '../assets/vote.jpg' 
-import './RegistrationPage.css'
+import './AuthPages.css'
 
 export default function RegistrationPage() {
   const { register } = useAuth()
@@ -81,20 +81,24 @@ export default function RegistrationPage() {
 
             <button type="submit">Create Account</button>
 
-            {status && <p className="status">{status}</p>}
+            {status && (
+              <p className={`reg-status ${status.toLowerCase().includes('error') || status.toLowerCase().includes('failed') ? 'error' : 'success'}`}>
+                {status}
+              </p>
+            )}
           </form>
 
-          <p className="login-link">
+          <div className="reg-footer-links">
             Already have an account? <a href="/login">Sign in here</a>
-          </p>
+          </div>
 
-          <div className="footer-links">
+          <div className="reg-footer-links" style={{ marginTop: '1rem', fontSize: '0.85rem' }}>
             <a href="/privacy">Privacy Policy</a> | 
             <a href="/terms">Terms</a> | 
             <a href="/help">Help Center</a>
           </div>
 
-          <p className="copyright">© 2024 CampusElect. All rights reserved.</p>
+          <p className="copyright" style={{ fontSize: '0.8rem', color: '#999', marginTop: '1rem', textAlign: 'center' }}>© 2024 CampusElect. All rights reserved.</p>
         </div>
       </div>
     </div>

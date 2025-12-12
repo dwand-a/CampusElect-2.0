@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import voteImg from '../assets/vote.jpg' 
-import './LoginPage.css'
+import './AuthPages.css'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -64,22 +64,24 @@ export default function LoginPage() {
                 Sign In
               </button>
 
-              {status && <p className="status">{status}</p>}
+              {status && (
+                <p className={`login-status ${status.toLowerCase().includes('failed') ? 'error' : 'success'}`}>
+                  {status}
+                </p>
+              )}
             </form>
 
-            <p className="forgot">Forgot password?</p>
+            <div className="reg-footer-links">
+              Don't have an account? <a href="/register">Register here</a>
+            </div>
 
-            <p className="register">
-              Don’t have an account? <a href="/register">Register here</a>
-            </p>
-
-            <div className="footer-links">
+            <div className="reg-footer-links" style={{ marginTop: '1rem', fontSize: '0.85rem' }}>
               <a href="/privacy">Privacy Policy</a> |
               <a href="/terms"> Terms of Service</a> |
               <a href="/help"> Help Center</a>
             </div>
 
-            <p className="copyright">
+            <p className="copyright" style={{ fontSize: '0.8rem', color: '#999', marginTop: '1rem', textAlign: 'center' }}>
               © 2024 CampusElect. All rights reserved.
             </p>
           </div>

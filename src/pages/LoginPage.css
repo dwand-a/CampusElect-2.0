@@ -2,7 +2,7 @@
 body, html {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: rockwell;
   background: #f2f5f8;
 }
 
@@ -54,7 +54,7 @@ body, html {
 .login-left h2 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #073a78;
+  color: #4a6cf7;
 }
 
 /* RIGHT SIDE */
