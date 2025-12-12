@@ -6,6 +6,10 @@
   --bg: #ffffff;
 }
 
+body{
+  font-family: rockwell;
+}
+
 .page {
   padding: 40px 10%;
   background: var(--bg);
